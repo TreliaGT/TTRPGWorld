@@ -486,6 +486,23 @@ body::after {
 }
 .icard.hidden { display:none; }
 
+/* ── TTS BUTTON ── */
+.tts-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  font-family:'Spectral SC',serif; font-size:0.58rem;
+  letter-spacing:0.1em; padding:3px 9px;
+  background:rgba(200,164,74,0.06);
+  border:1px solid rgba(200,164,74,0.2);
+  border-radius:2px; color:var(--gold-dim);
+  cursor:pointer; transition:all .2s;
+  margin-top:10px; flex-shrink:0;
+  user-select:none;
+}
+.tts-btn:hover { border-color:var(--gold); color:var(--gold); background:rgba(200,164,74,0.12); }
+.tts-btn.playing { border-color:var(--gold); color:var(--gold); background:rgba(200,164,74,0.15); }
+.tts-btn.playing .tts-icon::after { content:'◼'; }
+.tts-btn:not(.playing) .tts-icon::after { content:'▶'; }
+
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width:6px; height:6px; }
 ::-webkit-scrollbar-track { background:var(--bg); }
@@ -808,14 +825,14 @@ body::after {
           <div class="lcard-ico">🪦</div>
           <div>
             <div class="lcard-name">Ashenford</div>
-            <div class="lcard-type">Cursed Town · Undead Community</div>
+            <div class="lcard-type">Town · Mist-Shrouded · Dangerous</div>
           </div>
         </div>
-        <div class="lcard-desc">Cobblestone streets, lanterns glowing green, ivy-covered houses and a mist that never lifts. The townsfolk are gentle undead — cursed to rise but kind of heart. They crave connection, not flesh. "Always offering tea, even if their hands occasionally drop it."</div>
-        <div class="lcard-npcs">Key NPCs: <span>Morwenna "Mo" Hollowbrew · Mayor Greyveil</span></div>
+        <div class="lcard-desc">A fog-choked town with a dark reputation. Green lanterns, silent streets, and residents that don't quite seem right. Travellers go missing. Nobody talks about it openly.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Mo (The Last Drink) · Mayor Greyveil</span></div>
         <div class="tags">
-          <span class="tag t-arcane">Cursed</span>
-          <span class="tag t-sacred">Undead Town</span>
+          <span class="tag t-danger">Dangerous</span>
+          <span class="tag t-danger">Rumoured Deaths</span>
           <span class="tag t-guild">Golden Lantern Board</span>
         </div>
       </div>
@@ -856,7 +873,7 @@ body::after {
             <div class="lcard-type">Adventurer's Hub · Tavern · Quest Board</div>
           </div>
         </div>
-        <div class="lcard-desc">Mira Thornspire's former dungeon, now repurposed into the realm's most famous adventurer hub. A towering spire with lodging, a lively tavern with a performance stage, and a notice board full of quests. Rumoured to have a vault of relics below.</div>
+        <div class="lcard-desc">A towering adventurer's hub run by the enigmatic Mira Thornspire. Lodging, a lively tavern with a performance stage, and a notice board packed with quests for every kind of adventurer. The place to start any journey in Heldidon.</div>
         <div class="lcard-npcs">Key NPCs: <span>Mira Thornspire</span></div>
         <div class="tags">
           <span class="tag t-guild">Golden Lantern</span>
@@ -1084,10 +1101,10 @@ body::after {
         </div>
       </div>
       <div class="fcard-body">
-        <p>The general adventuring guild found across Heldidon. Run by retired adventurers called <strong>Managers</strong> — no single leader. Present at Thornspire Hub, Embermere (Gilded Net), Ashenford (Last Drink), and Scriptoria (Golden Dove).</p>
+        <p>The general adventuring guild found across Heldidon. Run by retired adventurers called <strong>Managers</strong> — no single leader. Present at Thornspire Hub, Embermere (Gilded Net), Ashenford (The Last Drink), and Scriptoria (Golden Dove).</p>
         <p style="margin-top:8px"><strong>Lantern Symbolism:</strong> Every hall bears an enchanted golden lantern that never extinguishes — guidance, safety, and light in the dark.</p>
       </div>
-      <div class="fcard-secret">Rumour: A hidden vault of relics lies beneath Thornspire. Managers deny it.</div>
+      <div class="fcard-secret">Rumour: Some of the greatest heroes in Heldidon started their careers at Thornspire.</div>
     </div>
 
     <div class="fcard">
@@ -1226,7 +1243,7 @@ body::after {
       </div></div>
       <div class="icard-badge-row"><span class="cat-badge cat-plant">Plant</span><span class="loc-badge">Ashenford</span></div>
       <div class="icard-effect">✦ Raw: Makes the voice sound slightly warmer and more trustworthy.</div>
-      <div class="icard-desc">Roses growing in Ashenford's mist-soaked gardens, dusted with the same gentle curse that afflicts the town. Brewed carefully, it enhances the drinker's charm and social ease.</div>
+      <div class="icard-desc">Roses growing in Ashenford's mist-soaked gardens. Something about this town clings to everything that grows here. Brewed carefully, it enhances the drinker's charm and makes them seem more trustworthy than they perhaps are.</div>
       <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
     </div>
 
@@ -1433,7 +1450,7 @@ body::after {
 
   </div>
 
-  <div class="slabel">Ashenford — Undead &amp; Cursed</div>
+  <div class="slabel">Ashenford — Mist &amp; Darkness</div>
   <div class="ing-grid">
 
     <div class="icard" data-cat="arcane" data-loc="loc-ashenford" style="border-top:2px solid #3a5a3a">
@@ -1443,7 +1460,7 @@ body::after {
       </div></div>
       <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Ashenford</span></div>
       <div class="icard-effect">✦ Raw: Burns with a faint green flame. Makes nearby shadows flicker oddly.</div>
-      <div class="icard-desc">Fat from the candles used in Ashenford's lanterns, which burn green due to the town's curse. Absorbed with decades of gentle undead energy. Brewed it can make a potion that lets the drinker perceive the recently deceased or sense death nearby.</div>
+      <div class="icard-desc">Fat from the candles used in Ashenford's lanterns, which burn an unnatural green. Something in the town has seeped into them over the years. Brewed, it can make a potion that lets the drinker sense death nearby or perceive things that should not still be moving.</div>
       <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Uncommon</span></div>
     </div>
 
@@ -1782,7 +1799,7 @@ body::after {
   <div id="modal">
     <div id="modal-bar" class="modal-bar"></div>
     <div class="modal-inner">
-      <button class="modal-close" onclick="document.getElementById('modal-bg').classList.remove('open')">✕</button>
+      <button class="modal-close" onclick="stopTTS();document.getElementById('modal-bg').classList.remove('open')">✕</button>
       <div id="modal-content"></div>
     </div>
   </div>
@@ -1899,21 +1916,19 @@ const MODALS = {
   },
   ashenford: {
     color:'linear-gradient(90deg,#2a4a2a,#405840)',
-    title:'Ashenford', type:'Cursed Town · Gentle Undead Community',
+    title:'Ashenford', type:'Town · Mist-Shrouded · Enter at Your Own Risk',
     html:`
       <h4>Overview</h4>
-      <p>Cobblestone streets lit by green lanterns, ivy-covered houses, and a mist that never quite leaves. The townsfolk are gentle undead — cursed but kind. "They might be pale, slow-moving, but endlessly polite — always offering tea, even if their hands occasionally drop it."</p>
-      <h4>The Curse</h4>
-      <p>Centuries ago a greedy lord desecrated the resting place of an ancient spirit. Instead of dying, the townsfolk rose again — zombie-like but gentle. Bodies decay slowly, souls remain kind. They are bound to Ashenford, unable to leave its mist-shrouded borders.</p>
-      <h4>Daily Life</h4>
-      <p>The cursed townsfolk crave not flesh but <em>connection</em> — they sustain themselves through stories, laughter, and companionship. Outsiders who visit often find themselves strangely comforted, though unsettled.</p>
-      <h4>The Mystery</h4>
-      <p>Some whisper the curse can be lifted if the ancient spirit is appeased. Others believe Ashenford has grown into something unique — a place where death is not an end but a new way of living.</p>
+      <p>A town with a dark reputation that spreads further than its borders. Green lanterns line cobblestone streets swallowed in ivy and perpetual mist. No one outside Ashenford is entirely sure what goes on inside — only that travellers who stop here sometimes fail to continue their journey.</p>
+      <h4>The Rumours</h4>
+      <p>Merchants avoid Ashenford when they can. Those who have passed through describe residents who seem... off. Pale faces, slow movements, eyes that track you a little too carefully. The mist never lifts — not even at noon. Some travellers report hearing whispers with no source. A few have gone in and never been seen again, though the town's residents always say they simply "moved on."</p>
+      <h4>Atmosphere</h4>
+      <p>The roads leading out of Ashenford are watched. The locals notice strangers immediately. And there is always someone nearby — always just within earshot — listening.</p>
       <h4>Key NPCs</h4>
-      <span class="npc-pill">Morwenna "Mo" Hollowbrew (Barkeeeper, The Last Drink)</span>
+      <span class="npc-pill">Mo (The Last Drink)</span>
       <span class="npc-pill">Mayor Greyveil</span>
       <h4>Notable Locations</h4>
-      <p><strong>The Last Drink</strong> — Local tavern with music and a Golden Lantern notice board. Run by Mo Hollowbrew.</p>
+      <p><strong>The Last Drink</strong> — A tavern that keeps its lights on late. Locals gather here. Strangers are watched.</p>
       <p><strong>Local Library</strong> — Well-known and unusually well-stocked for such a small cursed town.</p>`
   },
   rivenshield: {
@@ -1933,20 +1948,16 @@ const MODALS = {
   },
   thornspire: {
     color:'linear-gradient(90deg,#6a4a10,#c09030)',
-    title:'Thornspire Hub', type:'Adventurer\'s Hub · Tavern · Golden Lantern',
+    title:'Thornspire Hub', type:'Adventurer\'s Hub · Tavern · Quest Board',
     html:`
       <h4>Overview</h4>
-      <p>Mira Thornspire's home — once the notorious Thornspire Dungeon — transformed by a band of brave adventurers into the realm's premier hub. A towering spire with lodging, a lively tavern with a performance stage, and a notice board brimming with quests.</p>
+      <p>The most well-known adventurer's hub in Heldidon. A towering spire with ample lodging, a lively tavern with a performance stage, a well-stocked bar, and a notice board brimming with quests. Travellers from across the realm pass through its gates.</p>
       <h4>Mira Thornspire</h4>
-      <p>A mysterious being who was originally a chest in the dungeon. Andrew Rivers of the Forgotten Compass cursed them to stay within 1km of the dungeon. Later, the bard <em>Sapphire Merflare</em> found them and helped them grow as a person. Now Mira runs the hub, wears a comedy/tragedy mask depending on mood, and mentors new adventurers.</p>
-      <p>Mira never removes their mask. Behind it is a distorted face with a wide smile and sharp teeth. A compass birthmark sits on their neck.</p>
+      <p>The hub's eccentric manager. Mira is always found somewhere in the building, greeting adventurers with an enthusiasm that borders on unsettling. They wear a comedy or tragedy mask depending on their mood and never seem to leave the premises — though nobody has thought too hard about why.</p>
       <h4>Key NPCs</h4>
       <span class="npc-pill">Mira Thornspire</span>
       <span class="npc-pill">Sapphire Merflare</span>
-      <h4>History</h4>
-      <p>Once known as Thornspire Dungeon — infamous for perilous depths and arcane secrets. Sapphire Merflare and her party cleared it and repurposed it into a haven for adventurers.</p>
-      <h4>Rumour</h4>
-      <p>Some whisper that beneath Thornspire lies a hidden vault of relics collected by retired adventurers. Mira denies its existence — but smiles when asked.</p>`
+`
   },
   lexorith: {
     color:'linear-gradient(90deg,#5a1010,#8b2020)',
@@ -2026,11 +2037,7 @@ const MODALS = {
       <h4>Overview</h4>
       <p>A wide, winding river cloaked in perpetual fog. The mist clings to the surface, hiding what lurks beneath. The water is dark, almost black, and faint ripples suggest movement even when the air is still.</p>
       <h4>Monsters</h4>
-      <p>Giant Eels · River Serpents · Swarms of Piranha-like Fish · Drowned Dead · Tentacled Horror</p>
-      <h4>Encounter Ideas</h4>
-      <p><strong>Phantom Boat</strong> — A ghostly vessel drifts silently past. Following it leads into an ambush by drowned dead.</p>
-      <p><strong>Fog Attack</strong> — A giant eel bursts from the water, striking unseen until it's too late.</p>
-      <h4>Items Found Here</h4>`
+      <p>Giant Eels · River Serpents · Swarms of Piranha-like Fish · Drowned Dead · Tentacled Horror</p>`
   },
   grimwater: {
     color:'linear-gradient(90deg,#3a2a4a,#6a4a8a)',
@@ -2097,16 +2104,35 @@ const MODALS = {
 function openModal(key) {
   const d = MODALS[key];
   if (!d) return;
+  stopTTS();
   document.getElementById('modal-bar').style.background = d.color;
   document.getElementById('modal-content').innerHTML = `
     <div class="modal-title">${d.title}</div>
     <div class="modal-type">${d.type}</div>
+    <button class="tts-btn" style="margin-bottom:12px;" onclick="ttsModal(this, '${key}')"><span class="tts-icon"></span><span class="tts-label">Listen</span></button>
     <div class="modal-body">${d.html}</div>`;
   document.getElementById('modal-bg').classList.add('open');
 }
 
+function ttsModal(btn, key) {
+  const d = MODALS[key];
+  if (!d) return;
+  // Strip HTML tags and clean up whitespace
+  const raw = d.title + '. ' + d.html
+    .replace(/<h4[^>]*>/gi, '. ')
+    .replace(/<\/h4>/gi, '. ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&amp;/g, 'and')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/·/g, ',')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  speakCard(btn, raw);
+}
+
 function closeModal(e) {
   if (e.target === document.getElementById('modal-bg')) {
+    stopTTS();
     document.getElementById('modal-bg').classList.remove('open');
   }
 }
@@ -2132,8 +2158,137 @@ function filterIng(filter, btn) {
   document.getElementById('ing-empty').style.display = visible === 0 ? 'block' : 'none';
 }
 
+// ── TEXT TO SPEECH ──
+let currentUtterance = null;
+let currentBtn = null;
+
+function stopTTS() {
+  window.speechSynthesis.cancel();
+  if (currentBtn) {
+    currentBtn.classList.remove('playing');
+    currentBtn.querySelector('.tts-label').textContent = 'Listen';
+    currentBtn = null;
+  }
+  currentUtterance = null;
+}
+
+function speakCard(btn, text) {
+  // If already playing this card, stop it
+  if (currentBtn === btn) { stopTTS(); return; }
+  // Stop anything currently playing
+  stopTTS();
+
+  // Pick the best available voice — priority order
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = [
+    'Google UK English Female',
+    'Google UK English Male',
+    'Microsoft Sonia Online (Natural)',
+    'Microsoft Ryan Online (Natural)',
+    'Microsoft Libby Online (Natural)',
+    'Google US English',
+    'Karen',
+    'Samantha',
+    'Daniel',
+  ];
+  let voice = null;
+  for (const name of preferred) {
+    voice = voices.find(v => v.name === name);
+    if (voice) break;
+  }
+  if (!voice) voice = voices.find(v => v.lang === 'en-GB') ||
+                      voices.find(v => v.lang.startsWith('en') && v.localService) ||
+                      voices.find(v => v.lang.startsWith('en')) ||
+                      voices[0];
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.voice = voice;
+  utterance.rate = 0.88;
+  utterance.pitch = 1.0;
+  utterance.volume = 1;
+
+  utterance.onend = () => {
+    if (currentBtn === btn) {
+      btn.classList.remove('playing');
+      btn.querySelector('.tts-label').textContent = 'Listen';
+      currentBtn = null;
+      currentUtterance = null;
+    }
+  };
+
+  utterance.onerror = () => stopTTS();
+
+  currentUtterance = utterance;
+  currentBtn = btn;
+  btn.classList.add('playing');
+  btn.querySelector('.tts-label').textContent = 'Stop';
+  window.speechSynthesis.speak(utterance);
+}
+
+function ttsCard(btn) {
+  // Gather text from the card this button lives in
+  const card = btn.closest('.lcard, .fcard, .icard, .pcard');
+  if (!card) return;
+  const parts = [];
+  // Name
+  const name = card.querySelector('.lcard-name, .fcard-name, .icard-name, .pcard-name');
+  if (name) parts.push(name.textContent.trim());
+  // Type / subheading
+  const type = card.querySelector('.lcard-type, .fcard-align, .icard-source');
+  if (type) parts.push(type.textContent.trim());
+  // Main description
+  const desc = card.querySelector('.lcard-desc, .fcard-body, .icard-desc, .pcard-desc');
+  if (desc) parts.push(desc.textContent.trim());
+  // Effect line (ingredients)
+  const effect = card.querySelector('.icard-effect');
+  if (effect) parts.push(effect.textContent.trim());
+  // NPC line
+  const npcs = card.querySelector('.lcard-npcs');
+  if (npcs) parts.push(npcs.textContent.trim());
+
+  const text = parts.join('. ').replace(/\s+/g, ' ').trim();
+  speakCard(btn, text);
+}
+
+// Inject TTS buttons into all cards after DOM is ready
+function injectTTSButtons() {
+  const selectors = '.lcard-body, .fcard, .icard, .pcard-body';
+  document.querySelectorAll('.lcard, .fcard, .icard, .pcard').forEach(card => {
+    if (card.querySelector('.tts-btn')) return; // already has one
+    const btn = document.createElement('button');
+    btn.className = 'tts-btn';
+    btn.setAttribute('aria-label', 'Listen to this card');
+    btn.innerHTML = '<span class="tts-icon"></span><span class="tts-label">Listen</span>';
+    btn.addEventListener('click', (e) => { e.stopPropagation(); ttsCard(btn); });
+
+    // Append to the right container
+    const body = card.querySelector('.lcard-body, .pcard-body') || card;
+    body.appendChild(btn);
+  });
+}
+
+// Run on load and whenever a new page is shown
+document.addEventListener('DOMContentLoaded', () => {
+  // Voices load async in some browsers
+  if (window.speechSynthesis.getVoices().length === 0) {
+    window.speechSynthesis.onvoiceschanged = injectTTSButtons;
+  }
+  injectTTSButtons();
+});
+
+// Re-inject when switching pages (in case new cards render)
+const _origShow = show;
+window.show = function(id, btn) {
+  _origShow(id, btn);
+  stopTTS();
+  setTimeout(injectTTSButtons, 50);
+};
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('modal-bg').classList.remove('open');
+  if (e.key === 'Escape') {
+    stopTTS();
+    document.getElementById('modal-bg').classList.remove('open');
+  }
 });
 </script>
 </body>
