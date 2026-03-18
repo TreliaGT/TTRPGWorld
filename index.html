@@ -86,6 +86,8 @@ body::after {
   position:sticky; top:0; z-index:500;
   background:rgba(13,11,8,0.97); backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
+}
+#nav-inner {
   display:flex; justify-content:center; flex-wrap:wrap; padding:0 12px;
 }
 .ntab {
@@ -99,6 +101,39 @@ body::after {
 }
 .ntab:hover { color:var(--gold-pale); }
 .ntab.on  { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* hamburger */
+#nav-toggle {
+  display:none;
+  width:100%; padding:14px 18px;
+  background:none; border:none; cursor:pointer;
+  font-family:'Spectral SC',serif; font-size:0.7rem;
+  letter-spacing:0.18em; color:var(--gold);
+  text-align:left;
+  align-items:center; gap:10px;
+}
+#nav-toggle-icon { font-size:1.1rem; line-height:1; }
+#nav-label { flex:1; }
+#nav-arrow { font-size:0.7rem; transition:transform .25s; margin-left:auto; }
+#nav-arrow.open { transform:rotate(180deg); }
+
+#nav-inner.mobile-closed { display:none; }
+#nav-inner.mobile-open {
+  display:flex; flex-direction:column;
+  padding:4px 0 10px;
+  border-top:1px solid var(--border);
+}
+#nav-inner.mobile-open .ntab {
+  border-bottom:none;
+  border-left:2px solid transparent;
+  padding:12px 20px; text-align:left;
+  font-size:0.72rem;
+}
+#nav-inner.mobile-open .ntab.on {
+  border-left-color:var(--gold);
+  border-bottom:none;
+  background:rgba(200,164,74,0.06);
+}
 
 /* ── LAYOUT ── */
 #app { max-width:1160px; margin:0 auto; padding:52px 24px 100px; }
@@ -499,16 +534,9 @@ body::after {
 }
 
 @media(max-width:700px){
+  #nav-toggle { display:flex; }
+  #nav-inner { display:none; }
   #app { padding: 32px 16px 80px; }
-
-  /* header */
-  #hdr { padding: 44px 16px 32px; }
-  .hdr-title { font-size: clamp(2.8rem,12vw,4rem); }
-
-  /* nav — scrollable single row */
-  #nav { justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
-  #nav::-webkit-scrollbar { display:none; }
-  .ntab { padding:14px 14px; font-size:0.63rem; }
 
   /* page headers */
   .ph { flex-direction:column; gap:12px; margin-bottom:28px; }
@@ -557,13 +585,6 @@ body::after {
 
 @media(max-width:420px){
   .hdr-title { font-size:clamp(2.2rem,13vw,3rem); }
-  .hdr-sub { font-size:0.6rem; letter-spacing:0.2em; }
-
-  #world [style*="grid-template-columns"] {
-    grid-template-columns: repeat(2,1fr) !important;
-  }
-
-  .ntab { padding:12px 10px; font-size:0.6rem; }
 
   .modal-title { font-size:1.3rem; }
 
@@ -583,11 +604,18 @@ body::after {
 </header>
 
 <nav id="nav">
-  <button class="ntab on"  onclick="show('world',this)">Overview</button>
-  <button class="ntab"     onclick="show('areas',this)">Areas</button>
-  <button class="ntab"     onclick="show('factions',this)">Factions</button>
-  <button class="ntab"     onclick="show('ingredients',this)">Ingredients</button>
-  <button class="ntab"     onclick="show('crafting',this)">Crafting Guide</button>
+  <button id="nav-toggle" onclick="toggleNav()" aria-label="Toggle menu">
+    <span id="nav-toggle-icon">☰</span>
+    <span id="nav-label">Overview</span>
+    <span id="nav-arrow">▼</span>
+  </button>
+  <div id="nav-inner">
+    <button class="ntab on"  onclick="show('world',this)">Overview</button>
+    <button class="ntab"     onclick="show('areas',this)">Areas</button>
+    <button class="ntab"     onclick="show('factions',this)">Factions</button>
+    <button class="ntab"     onclick="show('ingredients',this)">Ingredients</button>
+    <button class="ntab"     onclick="show('crafting',this)">Crafting Guide</button>
+  </div>
 </nav>
 
 <div id="app">
@@ -607,7 +635,7 @@ body::after {
   </p>
   <div class="callout">"Welcome — let's start prep. This is the wiki for the TTRPG world of Heldidon, now running on the Daggerheart system."</div>
   <p class="lore-block">
-    From the coastal city of <em>Embermere</em> to the cursed mists of <em>Ashenford</em>, from the hedge-walls of the <em>Rootbound Labyrinth</em> to the black waters of the <em>Mistweave River</em> — Heldidon rewards those who explore it and punishes those who don't prepare. Five towns serve as anchors of civilization. Seven natural landmarks hide danger and treasure alike. Three connected realms — <em>Terravolca</em>, <em>Sylvarien</em>, and <em>Codexia</em> — bleed through at the edges.
+    From the coastal city of <em>Embermere</em> to the cursed mists of <em>Ashenford</em>, from the hedge-walls of the <em>Rootbound Labyrinth</em> to the black waters of the <em>Mistweave River</em> — Heldidon rewards those who explore it and punishes those who don't prepare. Five towns serve as anchors of civilization. Seven natural landmarks hide danger and treasure alike. Four connected realms — <em>Terravolca</em>, <em>Sylvarien</em>, <em>Codexia</em>, and the dreaded <em>Vethara</em> — bleed through at the edges. One of them only releases you when you are ready.
   </p>
 
   <div class="slabel">At a Glance</div>
@@ -640,7 +668,7 @@ body::after {
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:18px;text-align:center;">
       <div style="font-size:2rem;margin-bottom:6px;">🌐</div>
       <div style="font-family:'Spectral SC',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;">REALMS</div>
-      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">3</div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">4</div>
     </div>
   </div>
 
@@ -664,6 +692,13 @@ body::after {
       <div style="font-size:0.8rem;font-style:italic;color:var(--gold-dim);margin-bottom:8px;">Code · ex · ia — the Library</div>
       <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);">An infinite extradimensional archive. The Forgotten Compass hides portals to it in Scriptoria and Embermere. The shelves rearrange themselves.</div>
     </div>
+    <div style="background:var(--surface);border:1px solid rgba(139,46,46,0.4);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,46,46,0.7),transparent);"></div>
+      <div style="font-size:2rem;margin-bottom:8px;">🕊️🦅</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.95rem;color:#d06060;margin-bottom:4px;">Vethara</div>
+      <div style="font-size:0.8rem;font-style:italic;color:var(--gold-dim);margin-bottom:8px;">Veth · a · ra — the Realm of Remorse</div>
+      <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);">A realm of remorse ruled by the demi-god Varek the Unwritten. The maze responds to guilt — doves appear to those who genuinely reckon with their crimes and lead toward Varek's palace where freedom can be granted. Ravens circle those who feel nothing, and the walls close in.</div>
+    </div>
   </div>
 </div>
 
@@ -675,6 +710,31 @@ body::after {
       <div class="ph-title">Areas of Heldidon</div>
       <div class="ph-sub">Towns, landmarks, buildings & camps — click any card for details</div>
     </div>
+  </div>
+
+  <div class="slabel">Connected Realms</div>
+  <div class="loc-grid">
+
+    <div class="lcard" onclick="openModal('vethara')" style="border-color:rgba(139,46,46,0.3);">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#5a1010,#3a1a3a)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🕊️</div>
+          <div>
+            <div class="lcard-name" style="color:#d06060;">Vethara</div>
+            <div class="lcard-type">Veth · a · ra — Realm of Remorse · Path of the Dove</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A realm of remorse ruled by the demi-god Varek the Unwritten. The maze responds to guilt — doves appear to those who genuinely reckon with their crimes and lead toward Varek's palace where freedom can be granted. Ravens circle those who feel nothing, and the walls close in.</div>
+        <div class="lcard-npcs">Key figure: <span>Varek the Unwritten (Trickster God)</span></div>
+        <div class="tags">
+          <span class="tag t-sacred">Remorse &amp; Redemption</span>
+          <span class="tag t-arcane">Trickster God</span>
+          <span class="tag t-guild">Forgotten Compass — Entry Only</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="slabel">Towns</div>
@@ -1010,7 +1070,7 @@ body::after {
       <div class="fcard-body">
         <p>Seekers of lost knowledge and ancient magic. Leader: <strong>Andrew Rivers</strong>. Present in Embermere and Scriptoria.</p>
         <p style="margin-top:8px"><strong>Codexia Doors:</strong> Hidden portals to Codexia disguised as cracked mirrors, weathered archways, and forgotten wells. Only Keepers know the sigils.</p>
-        <p style="margin-top:8px"><strong>Compass Keepers:</strong> Members wear broken compass pendants — true direction is found in wisdom, not stars.</p>
+        <p style="margin-top:8px"><strong>Vetharan Banishment:</strong> The Forgotten Compass are the only faction who possess the spell to send someone into Vethara. It is never written down — memorised only by senior Keepers and passed verbally. Crucially, the spell only works one way. There is no return spell. Once inside, even a Keeper must earn their own way out through Varek's judgement.</p>
       </div>
       <div class="fcard-secret">Rumour: The Forgotten Compass can predict calamities before they happen.</div>
     </div>
@@ -1550,12 +1610,46 @@ body::after {
 
 <script>
 // ── NAVIGATION ──
+const isMobile = () => window.innerWidth <= 700;
+
 function show(id, btn) {
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.ntab').forEach(b => b.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   btn.classList.add('on');
+  // update hamburger label
+  document.getElementById('nav-label').textContent = btn.textContent.trim();
+  // close menu on mobile after selection
+  if (isMobile()) closeNav();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleNav() {
+  const inner = document.getElementById('nav-inner');
+  const arrow = document.getElementById('nav-arrow');
+  const isOpen = inner.classList.contains('mobile-open');
+  if (isOpen) {
+    inner.classList.remove('mobile-open');
+    inner.classList.add('mobile-closed');
+    arrow.classList.remove('open');
+  } else {
+    inner.classList.remove('mobile-closed');
+    inner.classList.add('mobile-open');
+    arrow.classList.add('open');
+  }
+}
+
+function closeNav() {
+  const inner = document.getElementById('nav-inner');
+  const arrow = document.getElementById('nav-arrow');
+  inner.classList.remove('mobile-open');
+  inner.classList.add('mobile-closed');
+  arrow.classList.remove('open');
+}
+
+// init mobile state
+if (isMobile()) {
+  document.getElementById('nav-inner').classList.add('mobile-closed');
 }
 
 // ── MODAL DATA ──
@@ -1791,6 +1885,32 @@ const MODALS = {
       <p>A coalition of orc families who swear loyalty to the Warchief. Each clan is known for a unique fighting style and heraldry. Leadership blends brute force with surprising pragmatism.</p>
       <h4>The Warforge Bazaar</h4>
       <p>A market where weapons, armor, beast hides, food, ale, and battle trophies are traded. One of the best places in Heldidon to acquire quality combat gear.</p>`
+  },
+  vethara: {
+    color:'linear-gradient(90deg,#1a2a3a,#3a2a5a)',
+    title:'Vethara', type:'Realm of Remorse · The Path of the Dove · Veth · a · ra',
+    html:`
+      <h4>Overview</h4>
+      <p>Vethara is not a prison of walls — it is a prison of the self. A dimension that responds entirely to the remorse of whoever walks within it. Those who carry guilt and genuinely reckon with it will find the path forward lit and gentle. Those who feel nothing for what they have done will find only darkness, dead ends, and watching eyes.</p>
+      <div style="border-left:2px solid #6a5a90;padding:10px 14px;background:rgba(106,90,144,0.07);margin:12px 0;font-style:italic;font-size:0.88rem;color:#a090c0;">
+        "The maze does not punish you. It simply shows you yourself — and waits."
+      </div>
+      <h4>The Demi-God — Varek the Unwritten</h4>
+      <p>Varek is a chaotic demi-god who resides in a vast palace at the heart of Vethara. They are unpredictable in personality — sometimes gentle and philosophical, sometimes maddening — but their purpose is unwavering: to judge not by law, but by genuine remorse. Varek did not build Vethara as a punishment. They built it as a mirror. Those who earn their way to the palace and stand before Varek honestly may be granted freedom. Those who arrive in defiance are simply returned to the maze.</p>
+      <h4>🕊️ The Doves — Signs of Remorse</h4>
+      <p>White doves appear to those who are genuinely grappling with their guilt. The more honest a person is with themselves about what they have done, the more doves gather around them. A single dove means a flicker of conscience. A flock means the path to Varek's palace is near. Doves lead the way — follow them and the maze's walls stay still, the corridors open, the light holds.</p>
+      <p>They cannot be lied to or manipulated. Performed remorse earns nothing. The doves know.</p>
+      <h4>🦅 The Ravens — Signs of No Remorse</h4>
+      <p>Black ravens appear to those who feel nothing for what they have done — or worse, who feel pride. A single raven watching means the maze has taken notice. More ravens mean the corridors will begin shifting, walls closing, paths looping back on themselves endlessly. A person surrounded by ravens and no doves may wander Vethara forever, never finding the palace, never finding the way out.</p>
+      <p>Ravens do not attack. They simply watch — and the maze responds to what they see.</p>
+      <h4>The Path to the Palace</h4>
+      <p>There is no map to Varek's palace. The only guide is the doves. Those who follow them honestly — sitting with their guilt, acknowledging their crimes aloud or in their heart — will find the corridors lengthening into grand halls, the dark softening, and eventually the palace gates ahead. The journey is different for everyone. Some arrive in hours. Others take years.</p>
+      <h4>Varek's Judgement</h4>
+      <p>Standing before Varek is unlike any trial. There is no argument, no defence. Varek simply looks at a person and asks one question — always different, always the one question the person least wants to answer. Those who answer honestly, regardless of how ugly the truth is, are granted freedom and returned to Heldidon. Those who lie, deflect, or perform are returned to the start of the maze to try again.</p>
+      <h4>The Banishment Spell</h4>
+      <p>Sending someone to Vethara requires the <strong>Vetharan Banishment</strong> — a spell known only to the <strong>Forgotten Compass</strong>. It is never written down, passed only verbally between senior Keepers. However, the spell only works one way. The Forgotten Compass can send people into Vethara — but they have no spell to bring anyone back out. Once inside, even a senior Keeper must face the maze like everyone else. The only way out is through Varek.</p>
+      <span class="faction-pill">Forgotten Compass — Entry Spell Only</span>
+      <span class="faction-pill">Varek the Unwritten — Demi-God of Remorse</span>`
   }
 };
 
