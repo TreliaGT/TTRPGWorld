@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heldidon — World Wiki</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Spectral+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0d0b08;
+  --bg2:       #131009;
+  --surface:   #1a1610;
+  --surface2:  #211d13;
+  --border:    rgba(180,140,60,0.15);
+  --border-hi: rgba(180,140,60,0.4);
+  --gold:      #c8a44a;
+  --gold-dim:  #705c22;
+  --gold-pale: #e6c882;
+  --cream:     #d4c6a4;
+  --cream-dim: #857860;
+  --red:       #6e2222;
+  --red-hi:    #c04040;
+  --green:     #264d30;
+  --green-hi:  #5aaa70;
+  --blue:      #1a3450;
+  --blue-hi:   #4a7cb8;
+  --purple-hi: #8a70c0;
+  --teal-hi:   #3a9090;
+  --orange-hi: #c07040;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Spectral',Georgia,serif;
+  background:var(--bg);
+  color:var(--cream);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:9000;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay; opacity:0.5;
+}
+
+/* ── HEADER ── */
+#hdr {
+  position:relative; text-align:center;
+  padding:64px 24px 44px;
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200,164,74,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 10% 100%, rgba(110,34,34,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(26,52,80,0.07) 0%, transparent 60%);
+}
+.hdr-pre {
+  font-family:'Spectral SC',serif; font-size:0.62rem;
+  letter-spacing:0.55em; color:var(--gold-dim);
+  text-transform:uppercase; margin-bottom:14px;
+}
+.hdr-title {
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:clamp(3.5rem,9vw,6.5rem);
+  color:var(--gold-pale);
+  text-shadow:0 0 60px rgba(200,164,74,0.2), 0 2px 0 rgba(0,0,0,0.9);
+  line-height:1; animation:fadeUp 1.4s ease;
+}
+.hdr-sub {
+  font-family:'Spectral SC',serif;
+  font-size:clamp(0.65rem,1.4vw,0.85rem);
+  letter-spacing:0.3em; color:var(--cream-dim);
+  margin-top:14px; font-style:italic;
+}
+.hdr-rule {
+  display:flex; align-items:center; gap:14px;
+  max-width:360px; margin:20px auto 0; position:relative;
+}
+.hdr-rule::before { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--gold-dim)); }
+.hdr-rule::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--gold-dim),transparent); }
+.hdr-rule span { color:var(--gold-dim); font-size:0.75rem; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── NAV ── */
+#nav {
+  position:sticky; top:0; z-index:500;
+  background:rgba(13,11,8,0.97); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:center; flex-wrap:wrap; padding:0 12px;
+}
+.ntab {
+  font-family:'Spectral SC',serif; font-size:0.67rem;
+  letter-spacing:0.18em; color:var(--cream-dim);
+  background:none; border:none;
+  border-bottom:2px solid transparent;
+  padding:15px 18px; cursor:pointer;
+  transition:color .2s,border-color .2s;
+  white-space:nowrap;
+}
+.ntab:hover { color:var(--gold-pale); }
+.ntab.on  { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* ── LAYOUT ── */
+#app { max-width:1160px; margin:0 auto; padding:52px 24px 100px; }
+.pg { display:none; }
+.pg.on { display:block; animation:pgIn .35s ease; }
+@keyframes pgIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── PAGE HEADER ── */
+.ph {
+  display:flex; gap:18px; align-items:flex-start;
+  margin-bottom:44px; padding-bottom:22px;
+  border-bottom:1px solid var(--border);
+}
+.ph-icon {
+  font-size:2.4rem; width:66px; height:66px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:3px; flex-shrink:0;
+}
+.ph-title {
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  color:var(--gold-pale); line-height:1.1;
+}
+.ph-sub { font-style:italic; color:var(--cream-dim); margin-top:5px; font-size:0.9rem; }
+
+/* ── SECTION LABELS ── */
+.slabel {
+  font-family:'Spectral SC',serif; font-size:0.62rem;
+  letter-spacing:0.4em; color:var(--gold-dim);
+  margin:44px 0 18px;
+  display:flex; align-items:center; gap:12px;
+}
+.slabel::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
+
+/* ── WORLD OVERVIEW TEXT ── */
+.lore-block {
+  max-width:740px;
+  font-size:1rem; line-height:1.9; color:var(--cream-dim);
+  margin-bottom:20px;
+}
+.lore-block em { color:var(--gold-pale); font-style:normal; font-family:'Spectral SC',serif; font-size:0.92em; }
+.lore-block strong { color:var(--cream); }
+.lore-block::first-letter {
+  font-family:'UnifrakturMaguntia',cursive; font-size:3.4rem;
+  float:left; line-height:0.75; margin-right:7px; margin-top:8px;
+  color:var(--gold);
+}
+.callout {
+  border-left:3px solid var(--gold-dim);
+  padding:14px 18px;
+  background:rgba(200,164,74,0.04);
+  margin:20px 0; font-style:italic;
+  color:var(--cream-dim); font-size:0.92rem; line-height:1.75;
+}
+
+/* ── LOCATION GRID ── */
+.loc-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+  gap:18px;
+}
+.lcard {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:3px; overflow:hidden;
+  transition:border-color .2s, transform .2s;
+  cursor:pointer; position:relative;
+}
+.lcard:hover { border-color:var(--border-hi); transform:translateY(-2px); }
+.lcard-bar { height:3px; width:100%; }
+.lcard-body { padding:20px 22px 18px; }
+.lcard-head { display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
+.lcard-ico { font-size:1.7rem; flex-shrink:0; margin-top:1px; }
+.lcard-name {
+  font-family:'Spectral SC',serif; font-size:1rem;
+  color:var(--gold-pale); font-weight:600; line-height:1.2;
+}
+.lcard-type { font-size:0.67rem; font-family:'Spectral SC',serif; letter-spacing:0.13em; color:var(--cream-dim); margin-top:2px; }
+.lcard-desc { font-size:0.86rem; line-height:1.75; color:var(--cream-dim); }
+.lcard-npcs { margin-top:10px; font-size:0.78rem; color:var(--cream-dim); font-style:italic; }
+.lcard-npcs span { color:var(--gold); }
+.tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:12px; }
+.tag {
+  font-family:'Spectral SC',serif; font-size:0.58rem;
+  letter-spacing:0.1em; padding:2px 8px;
+  border:1px solid; border-radius:2px;
+}
+.t-town   { border-color:rgba(90,170,112,0.35); color:var(--green-hi); background:rgba(38,77,48,0.15); }
+.t-wild   { border-color:rgba(74,124,184,0.35); color:var(--blue-hi);  background:rgba(26,52,80,0.15); }
+.t-danger { border-color:rgba(192,64,64,0.35);  color:var(--red-hi);   background:rgba(110,34,34,0.12); }
+.t-arcane { border-color:rgba(138,112,192,0.35);color:var(--purple-hi);background:rgba(60,48,100,0.12); }
+.t-trade  { border-color:rgba(192,112,64,0.35); color:var(--orange-hi);background:rgba(100,60,28,0.12); }
+.t-sacred { border-color:rgba(58,144,144,0.35); color:var(--teal-hi);  background:rgba(30,74,74,0.12); }
+.t-guild  { border-color:rgba(200,164,74,0.35); color:var(--gold);     background:rgba(100,80,20,0.12); }
+
+/* ── LOCATION DETAIL MODAL ── */
+#modal-bg {
+  display:none; position:fixed; inset:0; z-index:800;
+  background:rgba(0,0,0,0.75); backdrop-filter:blur(4px);
+  align-items:center; justify-content:center; padding:24px;
+}
+#modal-bg.open { display:flex; }
+#modal {
+  background:var(--bg2); border:1px solid var(--border-hi);
+  border-radius:4px; max-width:640px; width:100%;
+  max-height:85vh; overflow-y:auto;
+  animation:pgIn .25s ease;
+}
+#modal::-webkit-scrollbar { width:5px; }
+#modal::-webkit-scrollbar-track { background:var(--surface); }
+#modal::-webkit-scrollbar-thumb { background:var(--gold-dim); border-radius:3px; }
+.modal-bar { height:4px; }
+.modal-inner { padding:28px 30px 30px; }
+.modal-close {
+  float:right; background:none; border:none;
+  color:var(--cream-dim); font-size:1.2rem; cursor:pointer;
+  transition:color .2s; line-height:1; margin-top:-2px;
+}
+.modal-close:hover { color:var(--gold-pale); }
+.modal-title {
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:2rem; color:var(--gold-pale); margin-bottom:4px;
+}
+.modal-type { font-family:'Spectral SC',serif; font-size:0.65rem; letter-spacing:0.2em; color:var(--cream-dim); margin-bottom:16px; }
+.modal-body { font-size:0.92rem; line-height:1.85; color:var(--cream-dim); }
+.modal-body h4 { font-family:'Spectral SC',serif; font-size:0.78rem; letter-spacing:0.15em; color:var(--gold); margin:16px 0 6px; }
+.modal-body p { margin-bottom:10px; }
+.modal-body ul { padding-left:18px; margin-bottom:10px; }
+.modal-body ul li { margin-bottom:5px; }
+.modal-body strong { color:var(--cream); }
+.npc-pill {
+  display:inline-block; font-family:'Spectral SC',serif;
+  font-size:0.62rem; letter-spacing:0.1em;
+  padding:3px 10px; border:1px solid var(--border-hi);
+  border-radius:2px; margin:3px; color:var(--gold);
+  background:rgba(200,164,74,0.06);
+}
+.faction-pill {
+  display:inline-block; font-family:'Spectral SC',serif;
+  font-size:0.62rem; letter-spacing:0.1em;
+  padding:3px 10px; border:1px solid rgba(192,64,64,0.35);
+  border-radius:2px; margin:3px; color:var(--red-hi);
+  background:rgba(110,34,34,0.1);
+}
+
+/* ── FACTIONS ── */
+.faction-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:18px;
+}
+.fcard {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:3px; padding:22px 24px;
+  transition:border-color .2s;
+}
+.fcard:hover { border-color:var(--border-hi); }
+.fcard-head { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+.fcard-ico { font-size:1.8rem; }
+.fcard-name { font-family:'Spectral SC',serif; font-size:1rem; color:var(--gold-pale); font-weight:600; }
+.fcard-align { font-size:0.67rem; color:var(--cream-dim); font-style:italic; margin-top:2px; }
+.fcard-body { font-size:0.87rem; line-height:1.78; color:var(--cream-dim); }
+.fcard-body strong { color:var(--cream); }
+.fcard-secret {
+  margin-top:12px; padding:10px 14px;
+  background:rgba(200,164,74,0.04);
+  border-left:2px solid var(--gold-dim);
+  font-style:italic; font-size:0.82rem; color:var(--cream-dim);
+}
+
+/* ══════════════════════════════════
+   POTION WIKI STYLES
+══════════════════════════════════ */
+
+/* ── INGREDIENT CARDS ── */
+.ing-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:16px;
+}
+.icard {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:3px; padding:18px 20px;
+  transition:border-color .2s, transform .2s;
+  position:relative; overflow:hidden;
+}
+.icard:hover { border-color:var(--border-hi); transform:translateY(-2px); }
+.icard::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  opacity:0; transition:opacity .3s;
+}
+.icard:hover::before { opacity:1; }
+.icard-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.icard-ico { font-size:1.6rem; }
+.icard-name { font-family:'Spectral SC',serif; font-size:0.95rem; color:var(--gold-pale); font-weight:600; }
+.icard-source { font-size:0.68rem; color:var(--cream-dim); margin-top:1px; font-style:italic; }
+.icard-desc { font-size:0.84rem; line-height:1.72; color:var(--cream-dim); margin-bottom:10px; }
+.icard-effect {
+  font-size:0.78rem; font-style:italic;
+  color:var(--gold-dim); padding:6px 10px;
+  background:rgba(200,164,74,0.05);
+  border:1px solid rgba(200,164,74,0.12);
+  border-radius:2px; margin-bottom:8px;
+}
+.rarity-bar {
+  display:flex; align-items:center; gap:8px; margin-top:8px;
+}
+.rarity-label { font-family:'Spectral SC',serif; font-size:0.58rem; letter-spacing:0.12em; color:var(--cream-dim); }
+.rarity-dots { display:flex; gap:3px; }
+.rdot {
+  width:7px; height:7px; border-radius:50%;
+  border:1px solid var(--gold-dim);
+}
+.rdot.fill { background:var(--gold); border-color:var(--gold); }
+.rdot.r5 { background:var(--red-hi) !important; border-color:var(--red-hi) !important; }
+
+/* ── RECIPE / CRAFTING TABLE ── */
+.recipe-table-wrap { overflow-x:auto; }
+.recipe-table {
+  width:100%; border-collapse:collapse;
+  font-size:0.88rem;
+}
+.recipe-table th {
+  font-family:'Spectral SC',serif; font-size:0.63rem;
+  letter-spacing:0.2em; color:var(--gold-dim);
+  padding:12px 16px; text-align:left;
+  border-bottom:1px solid var(--border-hi);
+  white-space:nowrap;
+}
+.recipe-table td {
+  padding:13px 16px; border-bottom:1px solid var(--border);
+  vertical-align:top; line-height:1.65;
+}
+.recipe-table tr:hover td { background:rgba(200,164,74,0.03); }
+.recipe-table .rname {
+  font-family:'Spectral SC',serif; font-size:0.88rem;
+  color:var(--gold-pale); font-weight:600; white-space:nowrap;
+}
+.recipe-table .ring { color:var(--cream-dim); font-size:0.83rem; }
+.recipe-table .reffect { color:var(--cream-dim); font-size:0.83rem; }
+.recipe-table .rdh { color:var(--blue-hi); font-size:0.8rem; }
+.plus-badge {
+  display:inline-block; font-size:0.7rem; font-weight:700;
+  color:var(--gold-dim); margin:0 4px;
+}
+.ing-badge {
+  display:inline-block; background:rgba(200,164,74,0.08);
+  border:1px solid rgba(200,164,74,0.2);
+  border-radius:2px; padding:1px 7px;
+  font-size:0.78rem; color:var(--gold-pale);
+  margin:2px; white-space:nowrap;
+}
+.rarity-pip {
+  display:inline-block; width:8px; height:8px; border-radius:50%;
+  margin-right:4px; vertical-align:middle;
+}
+.pip1 { background:#5aaa70; }
+.pip2 { background:#c8a44a; }
+.pip3 { background:#4a7cb8; }
+.pip4 { background:#8a70c0; }
+.pip5 { background:#c04040; }
+
+/* ── POTION DETAIL CARDS ── */
+.potion-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:18px;
+}
+.pcard {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:3px; overflow:hidden;
+  transition:border-color .2s, transform .2s;
+}
+.pcard:hover { border-color:var(--border-hi); transform:translateY(-2px); }
+.pcard-bar { height:3px; }
+.pcard-body { padding:20px 22px 18px; }
+.pcard-head { display:flex; gap:12px; align-items:center; margin-bottom:10px; }
+.pcard-ico { font-size:2rem; }
+.pcard-name { font-family:'Spectral SC',serif; font-size:0.97rem; color:var(--gold-pale); font-weight:600; }
+.pcard-rarity {
+  display:inline-block; font-family:'Spectral SC',serif;
+  font-size:0.58rem; letter-spacing:0.12em;
+  padding:2px 8px; border-radius:2px;
+  margin-top:3px; border:1px solid;
+}
+.pr-common   { border-color:rgba(90,170,112,0.4); color:var(--green-hi); background:rgba(38,77,48,0.12); }
+.pr-uncommon { border-color:rgba(200,164,74,0.4); color:var(--gold);     background:rgba(100,80,20,0.12); }
+.pr-rare     { border-color:rgba(74,124,184,0.4); color:var(--blue-hi);  background:rgba(26,52,80,0.12); }
+.pr-legendary{ border-color:rgba(192,64,64,0.4); color:var(--red-hi);   background:rgba(110,34,34,0.12); }
+.pcard-ing {
+  font-size:0.8rem; color:var(--cream-dim); margin-bottom:8px;
+  font-style:italic;
+}
+.pcard-desc { font-size:0.87rem; line-height:1.78; color:var(--cream-dim); margin-bottom:10px; }
+.pcard-dh {
+  font-size:0.8rem; line-height:1.65;
+  color:var(--blue-hi); padding:8px 10px;
+  background:rgba(74,124,184,0.07);
+  border:1px solid rgba(74,124,184,0.18);
+  border-radius:2px;
+}
+.pcard-dh strong { color:var(--blue-hi); font-family:'Spectral SC',serif; font-size:0.72rem; letter-spacing:0.1em; }
+.pcard-location { font-size:0.75rem; color:var(--cream-dim); margin-top:10px; font-style:italic; }
+.pcard-location span { color:var(--gold-dim); }
+
+/* ── CRAFTING GUIDE ── */
+.guide-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+.guide-step {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:3px; padding:20px 22px;
+}
+.step-num {
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:2.2rem; color:var(--gold-dim); line-height:1;
+  margin-bottom:8px;
+}
+.step-title { font-family:'Spectral SC',serif; font-size:0.85rem; color:var(--gold-pale); margin-bottom:8px; letter-spacing:0.1em; }
+.step-body { font-size:0.85rem; line-height:1.75; color:var(--cream-dim); }
+
+/* ── FILTER BUTTONS ── */
+.filt-btn {
+  font-family:'Spectral SC',serif; font-size:0.62rem;
+  letter-spacing:0.12em; color:var(--cream-dim);
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:2px; padding:5px 12px; cursor:pointer;
+  transition:all .2s; white-space:nowrap;
+}
+.filt-btn:hover { border-color:var(--border-hi); color:var(--gold-pale); }
+.filt-btn.on { background:rgba(200,164,74,0.12); border-color:var(--gold); color:var(--gold); }
+
+/* ── INGREDIENT BADGES ── */
+.icard-badge-row { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
+.cat-badge {
+  font-family:'Spectral SC',serif; font-size:0.58rem;
+  letter-spacing:0.1em; padding:2px 8px; border-radius:2px;
+  border:1px solid; font-weight:600;
+}
+.cat-plant  { border-color:rgba(90,170,112,0.5); color:var(--green-hi); background:rgba(38,77,48,0.2); }
+.cat-animal { border-color:rgba(192,64,64,0.5);  color:var(--red-hi);   background:rgba(110,34,34,0.15); }
+.cat-arcane { border-color:rgba(74,124,184,0.5); color:var(--blue-hi);  background:rgba(26,52,80,0.2); }
+.loc-badge {
+  font-family:'Spectral SC',serif; font-size:0.58rem;
+  letter-spacing:0.08em; padding:2px 8px; border-radius:2px;
+  border:1px solid rgba(200,164,74,0.25);
+  color:var(--gold-dim); background:rgba(200,164,74,0.05);
+}
+.icard.hidden { display:none; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--gold-dim); border-radius:3px; }
+
+
+.stat-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:14px; margin-bottom:32px;
+}
+.realm-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:16px;
+}
+@media(max-width:420px){
+  .stat-grid { grid-template-columns:repeat(2,1fr); }
+  .realm-grid { grid-template-columns:1fr; }
+}
+/* ── RESPONSIVE ── */
+
+.stat-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:14px; margin-bottom:32px;
+}
+.realm-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:16px;
+}
+@media(max-width:420px){
+  .stat-grid { grid-template-columns:repeat(2,1fr); }
+  .realm-grid { grid-template-columns:1fr; }
+}
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .loc-grid,
+  .faction-grid,
+  .potion-grid,
+  .ing-grid,
+  .guide-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  }
+}
+
+@media(max-width:700px){
+  #app { padding: 32px 16px 80px; }
+
+  /* header */
+  #hdr { padding: 44px 16px 32px; }
+  .hdr-title { font-size: clamp(2.8rem,12vw,4rem); }
+
+  /* nav — scrollable single row */
+  #nav { justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
+  #nav::-webkit-scrollbar { display:none; }
+  .ntab { padding:14px 14px; font-size:0.63rem; }
+
+  /* page headers */
+  .ph { flex-direction:column; gap:12px; margin-bottom:28px; }
+  .ph-icon { width:48px; height:48px; font-size:1.8rem; }
+  .ph-title { font-size:clamp(1.5rem,7vw,2.2rem); }
+
+  /* grids go single column */
+  .loc-grid,
+  .faction-grid,
+  .potion-grid,
+  .ing-grid,
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* overview stat boxes */
+  #world .ph + div,
+  #world [style*="grid-template-columns"] {
+    grid-template-columns: repeat(3,1fr) !important;
+  }
+
+  /* filter bar */
+  #ing-filters > div { gap:6px; }
+  .filt-btn { font-size:0.58rem; padding:4px 9px; }
+  #ing-filters span[style*="width:80px"] { width:60px !important; font-size:0.58rem; }
+
+  /* modal */
+  #modal { max-height:92vh; }
+  .modal-inner { padding:20px 18px 24px; }
+  .modal-title { font-size:1.6rem; }
+
+  /* cards */
+  .lcard-body, .fcard, .icard, .pcard-body { padding:16px 18px; }
+
+  /* recipe table — make scrollable */
+  .recipe-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .recipe-table { min-width:600px; }
+
+  /* section label */
+  .slabel { font-size:0.58rem; margin-top:32px; }
+
+  /* lore text */
+  .lore-block { font-size:0.95rem; }
+  .lore-block::first-letter { font-size:2.6rem; }
+}
+
+@media(max-width:420px){
+  .hdr-title { font-size:clamp(2.2rem,13vw,3rem); }
+  .hdr-sub { font-size:0.6rem; letter-spacing:0.2em; }
+
+  #world [style*="grid-template-columns"] {
+    grid-template-columns: repeat(2,1fr) !important;
+  }
+
+  .ntab { padding:12px 10px; font-size:0.6rem; }
+
+  .modal-title { font-size:1.3rem; }
+
+  .npc-pill, .faction-pill { font-size:0.58rem; padding:2px 7px; }
+
+  .filt-btn { font-size:0.55rem; padding:3px 7px; }
+}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="hdr-pre">✦ &nbsp; Campaign Setting &nbsp; ✦</div>
+  <h1 class="hdr-title">Heldidon</h1>
+  <p class="hdr-sub">World Atlas · Potion Compendium · Faction Codex</p>
+  <div class="hdr-rule"><span>✦</span></div>
+</header>
+
+<nav id="nav">
+  <button class="ntab on"  onclick="show('world',this)">Overview</button>
+  <button class="ntab"     onclick="show('areas',this)">Areas</button>
+  <button class="ntab"     onclick="show('factions',this)">Factions</button>
+  <button class="ntab"     onclick="show('ingredients',this)">Ingredients</button>
+  <button class="ntab"     onclick="show('crafting',this)">Crafting Guide</button>
+</nav>
+
+<div id="app">
+
+<!-- ════════════════ OVERVIEW ════════════════ -->
+<div id="world" class="pg on">
+  <div class="ph">
+    <div class="ph-icon">🌍</div>
+    <div>
+      <div class="ph-title">The World of Heldidon</div>
+      <div class="ph-sub">Hel · di · don — the home world</div>
+    </div>
+  </div>
+
+  <p class="lore-block">
+    <em>Heldidon</em> is the seat of the known world — a land of ancient curses and fiery coastlines, of whispering forests older than memory and desert oases glittering with impossible crystals. It is a world shaped equally by those who build and those who burn, where adventurers rise from tavern doors and vanish into legend.
+  </p>
+  <div class="callout">"Welcome — let's start prep. This is the wiki for the TTRPG world of Heldidon, now running on the Daggerheart system."</div>
+  <p class="lore-block">
+    From the coastal city of <em>Embermere</em> to the cursed mists of <em>Ashenford</em>, from the hedge-walls of the <em>Rootbound Labyrinth</em> to the black waters of the <em>Mistweave River</em> — Heldidon rewards those who explore it and punishes those who don't prepare. Five towns serve as anchors of civilization. Seven natural landmarks hide danger and treasure alike. Three connected realms — <em>Terravolca</em>, <em>Sylvarien</em>, and <em>Codexia</em> — bleed through at the edges.
+  </p>
+
+  <div class="slabel">At a Glance</div>
+  <div class="stat-grid">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:18px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:6px;">🏘️</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;">TOWNS</div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">5</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:18px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:6px;">🌿</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;">LANDMARKS</div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">9</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:18px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:6px;">⚔️</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;">FACTIONS</div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">6</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:18px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:6px;">🌿</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;">INGREDIENTS</div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">7</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:18px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:6px;">⚗️</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;">POTIONS</div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">10</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:18px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:6px;">🌐</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;">REALMS</div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">3</div>
+    </div>
+  </div>
+
+  <div class="slabel">Connected Realms</div>
+  <div class="realm-grid">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 22px;">
+      <div style="font-size:2rem;margin-bottom:8px;">🦕</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.95rem;color:var(--gold-pale);margin-bottom:4px;">Terravolca</div>
+      <div style="font-size:0.8rem;font-style:italic;color:var(--gold-dim);margin-bottom:8px;">Ter · ra · vol · ca — the Dino Realm</div>
+      <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);">Volcanic lands of primordial beasts and molten plains. Dangerous, primal, and filled with Cinderkith ancestry.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 22px;">
+      <div style="font-size:2rem;margin-bottom:8px;">🧚</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.95rem;color:var(--gold-pale);margin-bottom:4px;">Sylvarien</div>
+      <div style="font-size:0.8rem;font-style:italic;color:var(--gold-dim);margin-bottom:8px;">Syl · var · ien — the Faire Realm</div>
+      <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);">Ancient fey forests where time slips and faire folk bargain with your memories. Beautiful and treacherous.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 22px;">
+      <div style="font-size:2rem;margin-bottom:8px;">📚</div>
+      <div style="font-family:'Spectral SC',serif;font-size:0.95rem;color:var(--gold-pale);margin-bottom:4px;">Codexia</div>
+      <div style="font-size:0.8rem;font-style:italic;color:var(--gold-dim);margin-bottom:8px;">Code · ex · ia — the Library</div>
+      <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);">An infinite extradimensional archive. The Forgotten Compass hides portals to it in Scriptoria and Embermere. The shelves rearrange themselves.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ AREAS ════════════════ -->
+<div id="areas" class="pg">
+  <div class="ph">
+    <div class="ph-icon">🗺️</div>
+    <div>
+      <div class="ph-title">Areas of Heldidon</div>
+      <div class="ph-sub">Towns, landmarks, buildings & camps — click any card for details</div>
+    </div>
+  </div>
+
+  <div class="slabel">Towns</div>
+  <div class="loc-grid">
+
+    <div class="lcard" onclick="openModal('embermere')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#8b3a1a,#c06030)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">⚓</div>
+          <div>
+            <div class="lcard-name">Embermere</div>
+            <div class="lcard-type">Coastal City · Trade Hub · Royal Seat</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A vibrant coastal city between jagged cliffs and the shimmering sea. Home to the royal House Embermantle and the beating heart of maritime trade. Fire-shaped birthmarks, Phoenix crests, and ember-coloured sunsets define this city.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Queen Maerlyn Embermantle · Prince Kaelen · Alexander Tidecaller</span></div>
+        <div class="tags">
+          <span class="tag t-town">Town</span>
+          <span class="tag t-trade">Trade</span>
+          <span class="tag t-guild">Golden Lantern</span>
+          <span class="tag t-danger">Red Requiem Activity</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('zerathis')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#7a6010,#c0a030)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🏜️</div>
+          <div>
+            <div class="lcard-name">Zerathis</div>
+            <div class="lcard-type">Desert City · Oasis · Crystal Spire</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A dazzling oasis city built around a colossal crystal spire that glows faintly at night, guiding travelers across the Amber Dunes. Sandstorms can swallow entire caravans. Home of the Dune Serpents and the Order of the Crystal Flame.</div>
+        <div class="lcard-npcs">Key NPCs: <span>High Vizier Seraphel al-Dunai</span></div>
+        <div class="tags">
+          <span class="tag t-town">Town</span>
+          <span class="tag t-arcane">Crystal Spire</span>
+          <span class="tag t-danger">Dune Serpents</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('scriptoria')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#2a3a7a,#5060c0)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">📜</div>
+          <div>
+            <div class="lcard-name">Scriptoria</div>
+            <div class="lcard-type">Arcane City · Leyline Nexus · Script-or-ia</div>
+          </div>
+        </div>
+        <div class="lcard-desc">The magical and intellectual heart of Heldidon, built atop a powerful leyline nexus. Floating towers, glowing glyphs, and the Grand Lexicon. Headquarters of the Forgotten Compass, with a hidden portal to Codexia.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Andrew Rivers · Thalorin Vey</span></div>
+        <div class="tags">
+          <span class="tag t-arcane">Arcane</span>
+          <span class="tag t-guild">Forgotten Compass HQ</span>
+          <span class="tag t-town">Town</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('ashenford')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#2a4a2a,#405840)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🪦</div>
+          <div>
+            <div class="lcard-name">Ashenford</div>
+            <div class="lcard-type">Cursed Town · Undead Community</div>
+          </div>
+        </div>
+        <div class="lcard-desc">Cobblestone streets, lanterns glowing green, ivy-covered houses and a mist that never lifts. The townsfolk are gentle undead — cursed to rise but kind of heart. They crave connection, not flesh. "Always offering tea, even if their hands occasionally drop it."</div>
+        <div class="lcard-npcs">Key NPCs: <span>Morwenna "Mo" Hollowbrew · Mayor Greyveil</span></div>
+        <div class="tags">
+          <span class="tag t-arcane">Cursed</span>
+          <span class="tag t-sacred">Undead Town</span>
+          <span class="tag t-guild">Golden Lantern Board</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('rivenshield')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#3a3a5a,#606090)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">⚒️</div>
+          <div>
+            <div class="lcard-name">Rivenshield</div>
+            <div class="lcard-type">Dwarven Town · Elven Ruins · River Valley</div>
+          </div>
+        </div>
+        <div class="lcard-desc">Nestled where a river winds past ancient elven ruins, Rivenshield is known for the finest blacksmithing in the realm. Dwarven ingenuity and water power drive its forges. The mossy elven ruins nearby hold the memory of a tragedy the town has never forgotten.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Trelia Spring · Grandpa Joseph Spring · Henry Stone</span></div>
+        <div class="tags">
+          <span class="tag t-trade">Best Blacksmiths</span>
+          <span class="tag t-wild">Elven Ruins</span>
+          <span class="tag t-town">Town</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slabel">Buildings & Hubs</div>
+  <div class="loc-grid">
+
+    <div class="lcard" onclick="openModal('thornspire')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#6a4a10,#c09030)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🏠</div>
+          <div>
+            <div class="lcard-name">Thornspire Hub</div>
+            <div class="lcard-type">Adventurer's Hub · Tavern · Quest Board</div>
+          </div>
+        </div>
+        <div class="lcard-desc">Mira Thornspire's former dungeon, now repurposed into the realm's most famous adventurer hub. A towering spire with lodging, a lively tavern with a performance stage, and a notice board full of quests. Rumoured to have a vault of relics below.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Mira Thornspire</span></div>
+        <div class="tags">
+          <span class="tag t-guild">Golden Lantern</span>
+          <span class="tag t-trade">Starting Hub</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('lexorith')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#5a1010,#8b2020)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🩸</div>
+          <div>
+            <div class="lcard-name">Lexorith Manor</div>
+            <div class="lcard-type">Villain Lair · Mountain Peak · Lex-or-rith</div>
+          </div>
+        </div>
+        <div class="lcard-desc">Home of Madam Red and headquarters of the Red Requiem, perched on a mountain peak. Appears as a simple homestead from outside. Inside — true horror lies. Rose coins are minted here from the melted jewelry of victims.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Madam Red · Lucy</span></div>
+        <div class="tags">
+          <span class="tag t-danger">Red Requiem HQ</span>
+          <span class="tag t-danger">Villain Lair</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slabel">Natural Landmarks</div>
+  <div class="loc-grid">
+
+    <div class="lcard" onclick="openModal('silentgrove')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#1a3a5a,#2a5a8a)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🐉</div>
+          <div>
+            <div class="lcard-name">Silent Grove</div>
+            <div class="lcard-type">Sacred Site · Dragon Sanctuary</div>
+          </div>
+        </div>
+        <div class="lcard-desc">An underground cavern with a columned temple where crystalline dragon eggs and sleeping dragons are preserved by the Slumbering Pact. Ancient tribes guard the Heart of the Slumbering Mist — a fist-sized pulsating crystal.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Vaerith Silentscale</span></div>
+        <div class="tags">
+          <span class="tag t-sacred">Dragon Sanctuary</span>
+          <span class="tag t-arcane">Ancient Magic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('whisperingglade')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#1a4a20,#3a8040)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🌸</div>
+          <div>
+            <div class="lcard-name">Whispering Glade</div>
+            <div class="lcard-type">Enchanted Forest · Ingredient Source</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A deep forest of wildflowers and moss near Thornspire Hub. Faint spirit whispers guide travellers. At night the forest glows softly — but ghosts lurk in the shadows. The Elder Tree at its heart offers wisdom to new adventurers. Source of Moonflower Petals and Whispering Willow Bark.</div>
+        <div class="lcard-npcs">Key NPCs: <span>The Elder Tree</span></div>
+        <div class="tags">
+          <span class="tag t-wild">Forest</span>
+          <span class="tag t-arcane">Spirit Whispers</span>
+          <span class="tag t-trade">Ingredient Source</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('rootbound')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#2a4a10,#4a7a20)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🌳</div>
+          <div>
+            <div class="lcard-name">Rootbound Labyrinth</div>
+            <div class="lcard-type">Hedge Maze · Beast Lair · Dungeon</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A vast, neatly trimmed hedge maze littered with bones and blood-soaked earth, guarding powerful magical treasures. Controlled by the Master Druid. Shambling Mounds, Twig Blights, and Awakened Trees roam within — this is not a place for the unprepared.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Master Druid (Archdruid Elf)</span></div>
+        <div class="tags">
+          <span class="tag t-danger">Dungeon</span>
+          <span class="tag t-wild">Nature Magic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('drownedcircle')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#102a4a,#2a5a8a)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🌊</div>
+          <div>
+            <div class="lcard-name">The Drowned Circle</div>
+            <div class="lcard-type">Sacred Lake · Submerged City · Merfolk Territory</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A perfectly round, still lake with an unnatural symmetry. Broken spires and collapsed archways rest beneath its black water. Merfolk have rebuilt their ancestral capital among the ruins using coral and kelp. Blue-green lights glow from the depths at night.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Merfolk Ambassador</span></div>
+        <div class="tags">
+          <span class="tag t-sacred">Merfolk Sacred</span>
+          <span class="tag t-wild">Submerged Ruins</span>
+          <span class="tag t-danger">Guarded</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('mistweave')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#101a2a,#203050)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🌫️</div>
+          <div>
+            <div class="lcard-name">Mistweave River</div>
+            <div class="lcard-type">Cursed River · Monster Habitat</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A wide, winding river cloaked in perpetual fog. The water is almost black. Giant eels, river serpents, drowned dead, and a tentacled horror lurk beneath. A phantom boat is said to drift past at midnight — following it leads only to ambush.</div>
+        <div class="tags">
+          <span class="tag t-danger">Very Dangerous</span>
+          <span class="tag t-wild">River</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slabel">Camps & Crossings</div>
+  <div class="loc-grid">
+    <div class="lcard" onclick="openModal('grimwater')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#3a2a4a,#6a4a8a)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🧙</div>
+          <div>
+            <div class="lcard-name">Grimwater Crossing</div>
+            <div class="lcard-type">Witches' Camp · Potion Source · Crossing</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A shadowed river crossing sacred to a witches' coven. The air is thick with incense, whispers, and river herbs. Potions are brewed here from rare plants and monster parts. The High Witch holds court and the river spirits demand offerings. Whispering Willow Bark grows along its banks.</div>
+        <div class="lcard-npcs">Key NPCs: <span>High Witch (The River-Mother) · Nyssa Hollowbrook</span></div>
+        <div class="tags">
+          <span class="tag t-danger">Hostile</span>
+          <span class="tag t-arcane">Ritual Magic</span>
+          <span class="tag t-trade">Ingredient Source</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lcard" onclick="openModal('stonefang')">
+      <div class="lcard-bar" style="background:linear-gradient(90deg,#4a2a10,#8a5030)"></div>
+      <div class="lcard-body">
+        <div class="lcard-head">
+          <div class="lcard-ico">🪨</div>
+          <div>
+            <div class="lcard-name">Stonefang</div>
+            <div class="lcard-type">Mountain Foothills Settlement</div>
+          </div>
+        </div>
+        <div class="lcard-desc">A rugged settlement carved into the foothills of the Ironfang Mountains, surrounded by game-thick forests and clay-red rivers. Stone walls scarred by battle, forge-clang and war drums, yet honor and kinship bind this fierce community.</div>
+        <div class="lcard-npcs">Key NPCs: <span>Warchief Grathok Bloodfang</span></div>
+        <div class="tags">
+          <span class="tag t-town">Settlement</span>
+          <span class="tag t-trade">Warforge Bazaar</span>
+          <span class="tag t-danger">Military</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ FACTIONS ════════════════ -->
+<div id="factions" class="pg">
+  <div class="ph">
+    <div class="ph-icon">⚔️</div>
+    <div>
+      <div class="ph-title">Factions of Heldidon</div>
+      <div class="ph-sub">Six powers shaping the world from the shadows and the light</div>
+    </div>
+  </div>
+
+  <div class="faction-grid">
+
+    <div class="fcard">
+      <div class="fcard-head">
+        <div class="fcard-ico">🔴</div>
+        <div>
+          <div class="fcard-name">Red Requiem</div>
+          <div class="fcard-align">Assassin Guild · Ruthless · Infamous</div>
+        </div>
+      </div>
+      <div class="fcard-body">
+        <p>Merciless killers and assassins, operating from the shadows. Leader: <strong>Madam Red</strong>, based at Lexorith Manor. Second: <strong>Lucy</strong>.</p>
+        <p style="margin-top:8px"><strong>Rose Coins:</strong> Their own currency stamped with a rose — banned in Embermere, used for black market trades. Rumoured to be forged from the melted jewellery of their victims, and cursed to mark those who spend them too freely.</p>
+        <p style="margin-top:8px"><strong>Silent Oaths:</strong> Members adopt crimson titles — Scarlet Fang, Crimson Veil, Vermilion Shade — and never speak their true names.</p>
+      </div>
+      <div class="fcard-secret">Rumour: Every rose coin carries a death mark for those who spend them too freely.</div>
+    </div>
+
+    <div class="fcard">
+      <div class="fcard-head">
+        <div class="fcard-ico">🧭</div>
+        <div>
+          <div class="fcard-name">The Forgotten Compass</div>
+          <div class="fcard-align">Arcane Society · Neutral · Mysterious</div>
+        </div>
+      </div>
+      <div class="fcard-body">
+        <p>Seekers of lost knowledge and ancient magic. Leader: <strong>Andrew Rivers</strong>. Present in Embermere and Scriptoria.</p>
+        <p style="margin-top:8px"><strong>Codexia Doors:</strong> Hidden portals to Codexia disguised as cracked mirrors, weathered archways, and forgotten wells. Only Keepers know the sigils.</p>
+        <p style="margin-top:8px"><strong>Compass Keepers:</strong> Members wear broken compass pendants — true direction is found in wisdom, not stars.</p>
+      </div>
+      <div class="fcard-secret">Rumour: The Forgotten Compass can predict calamities before they happen.</div>
+    </div>
+
+    <div class="fcard">
+      <div class="fcard-head">
+        <div class="fcard-ico">🏮</div>
+        <div>
+          <div class="fcard-name">The Golden Lantern</div>
+          <div class="fcard-align">Adventuring Guild · Warm · Protective</div>
+        </div>
+      </div>
+      <div class="fcard-body">
+        <p>The general adventuring guild found across Heldidon. Run by retired adventurers called <strong>Managers</strong> — no single leader. Present at Thornspire Hub, Embermere (Gilded Net), Ashenford (Last Drink), and Scriptoria (Golden Dove).</p>
+        <p style="margin-top:8px"><strong>Lantern Symbolism:</strong> Every hall bears an enchanted golden lantern that never extinguishes — guidance, safety, and light in the dark.</p>
+      </div>
+      <div class="fcard-secret">Rumour: A hidden vault of relics lies beneath Thornspire. Managers deny it.</div>
+    </div>
+
+    <div class="fcard">
+      <div class="fcard-head">
+        <div class="fcard-ico">🤫</div>
+        <div>
+          <div class="fcard-name">The Silent Honor</div>
+          <div class="fcard-align">Holy Order · Lawful · Feared</div>
+        </div>
+      </div>
+      <div class="fcard-body">
+        <p>Silent warriors and paladins bound by a sacred vow. Present in Embermere. Exist as scattered clans — some vow total muteness, others only ritual silence.</p>
+        <p style="margin-top:8px"><strong>Symbols:</strong> Roaring beast tattoos (lion, wolf, dragon) carved into armor — the roar of their deeds.</p>
+        <p style="margin-top:8px"><em>"They speak not, but their deeds roar."</em></p>
+      </div>
+      <div class="fcard-secret">Words are fleeting, but actions carve eternity.</div>
+    </div>
+
+    <div class="fcard">
+      <div class="fcard-head">
+        <div class="fcard-ico">🐍</div>
+        <div>
+          <div class="fcard-name">The Dune Serpents</div>
+          <div class="fcard-align">Thieves' Guild · Criminal · Desert-Based</div>
+        </div>
+      </div>
+      <div class="fcard-body">
+        <p>A thieves' guild controlling smuggling routes and black-market trade, based in <strong>Zerathis</strong>. Guildmaster: <em>The Serpent's Tongue</em> — identity concealed even from most members.</p>
+        <p style="margin-top:8px"><strong>Hierarchy:</strong> The Fang (assassins) → The Coil (smugglers) → The Scale (thieves & informants).</p>
+        <p style="margin-top:8px"><strong>Rivals:</strong> Clash with the Golden Lantern (disrupts operations) and Red Requiem (compete for contracts).</p>
+      </div>
+      <div class="fcard-secret">Rumour: They use snake venom as ink to sign black market contracts.</div>
+    </div>
+
+    <div class="fcard">
+      <div class="fcard-head">
+        <div class="fcard-ico">🔥</div>
+        <div>
+          <div class="fcard-name">Order of the Crystal Flame</div>
+          <div class="fcard-align">Religious Guild · Devout · Desert-Bound</div>
+        </div>
+      </div>
+      <div class="fcard-body">
+        <p>A devout religious order centred on the colossal crystal spire in Zerathis. Priests, mystics, and flamebearers who oversee rituals and guard the sanctity of the spire.</p>
+        <p style="margin-top:8px"><strong>Belief:</strong> The spire is a divine beacon channelling celestial power into the desert and guiding both pilgrims and rulers.</p>
+      </div>
+      <div class="fcard-secret">The visions flamebearers receive are said to be instructions — not prophecy.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════ INGREDIENTS ════════════════ -->
+<div id="ingredients" class="pg">
+  <div class="ph">
+    <div class="ph-icon">🌿</div>
+    <div>
+      <div class="ph-title">Ingredients</div>
+      <div class="ph-sub">Gathered across Heldidon's realms — raw materials for the alchemist's craft</div>
+    </div>
+  </div>
+
+  <p class="lore-block" style="font-size:0.95rem;">Ingredients are the foundation of all potion-making in Heldidon. Each has a rarity rating (1 = common, 5 = legendary), a raw effect when used alone, and a location in the world where it can be harvested or found. Combining two or more unlocks their true alchemical potential.</p>
+
+  <!-- FILTER BAR -->
+  <div id="ing-filters" style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+      <span style="font-family:'Spectral SC',serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--gold-dim);width:80px;flex-shrink:0;">CATEGORY</span>
+      <button class="filt-btn on" onclick="filterIng('all',this)">All</button>
+      <button class="filt-btn" onclick="filterIng('plant',this)">🌿 Plant</button>
+      <button class="filt-btn" onclick="filterIng('animal',this)">🐾 Animal</button>
+      <button class="filt-btn" onclick="filterIng('arcane',this)">✨ Arcane</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+      <span style="font-family:'Spectral SC',serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--gold-dim);width:80px;flex-shrink:0;">LOCATION</span>
+      <button class="filt-btn" onclick="filterIng('loc-whispering',this)">Whispering Glade</button>
+      <button class="filt-btn" onclick="filterIng('loc-grimwater',this)">Grimwater Crossing</button>
+      <button class="filt-btn" onclick="filterIng('loc-embermere',this)">Embermere</button>
+      <button class="filt-btn" onclick="filterIng('loc-zerathis',this)">Zerathis</button>
+      <button class="filt-btn" onclick="filterIng('loc-rivenshield',this)">Rivenshield</button>
+      <button class="filt-btn" onclick="filterIng('loc-drownedcircle',this)">Drowned Circle</button>
+      <button class="filt-btn" onclick="filterIng('loc-scriptoria',this)">Scriptoria</button>
+      <button class="filt-btn" onclick="filterIng('loc-mistweave',this)">Mistweave River</button>
+      <button class="filt-btn" onclick="filterIng('loc-rootbound',this)">Rootbound Labyrinth</button>
+      <button class="filt-btn" onclick="filterIng('loc-ashenford',this)">Ashenford</button>
+      <button class="filt-btn" onclick="filterIng('loc-stonefang',this)">Stonefang</button>
+      <button class="filt-btn" onclick="filterIng('loc-terravolca',this)">Terravolca</button>
+    </div>
+  </div>
+
+  <div id="ing-empty" style="display:none;padding:40px;text-align:center;color:var(--cream-dim);font-style:italic;">No ingredients match this filter.</div>
+
+  <div id="ing-grid" class="ing-grid">
+
+    <!-- ══ PLANT ══ -->
+    <div class="icard" data-cat="plant" data-loc="loc-whispering" style="border-top:2px solid var(--green)">
+      <div class="icard-top"><div class="icard-ico">🌸</div><div>
+        <div class="icard-name">Moonflower Petals</div>
+        <div class="icard-source">Plant · Wildflower</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-plant">Plant</span><span class="loc-badge">Whispering Glade</span></div>
+      <div class="icard-effect">✦ Raw: Glow faintly under moonlight. Soothes mild headaches.</div>
+      <div class="icard-desc">White flowers that bloom only under moonlight. Alone they soothe mild headaches, but when brewed they enhance clarity of thought.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+    <div class="icard" data-cat="plant" data-loc="loc-whispering loc-grimwater" style="border-top:2px solid var(--green)">
+      <div class="icard-top"><div class="icard-ico">🌿</div><div>
+        <div class="icard-name">Whispering Willow Bark</div>
+        <div class="icard-source">Plant · Tree bark</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-plant">Plant</span><span class="loc-badge">Whispering Glade</span><span class="loc-badge">Grimwater Crossing</span></div>
+      <div class="icard-effect">✦ Raw: Emits a soft hum when held. Calms nerves slightly.</div>
+      <div class="icard-desc">Peeled from willows that grow along spirit-touched waterways. By itself it calms nerves, but brewed it amplifies communication skills and empathy.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common — 0.5g</span></div>
+    </div>
+
+    <div class="icard" data-cat="plant" data-loc="loc-embermere loc-terravolca" style="border-top:2px solid var(--green)">
+      <div class="icard-top"><div class="icard-ico">🌶️</div><div>
+        <div class="icard-name">Embercap Fungus</div>
+        <div class="icard-source">Plant · Volcanic rock crevices</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-plant">Plant</span><span class="loc-badge">Embermere</span><span class="loc-badge">Terravolca</span></div>
+      <div class="icard-effect">✦ Raw: Burns the tongue. Raises body temperature slightly.</div>
+      <div class="icard-desc">A red-capped fungus growing in heat-cracked rock near Embermere's cliffs and the Terravolca border. Brewed, it floods the body with heat and aggression — briefly sharpening combat instincts.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+    <div class="icard" data-cat="plant" data-loc="loc-ashenford" style="border-top:2px solid var(--green)">
+      <div class="icard-top"><div class="icard-ico">🌹</div><div>
+        <div class="icard-name">Ashen Rose Pollen</div>
+        <div class="icard-source">Plant · Cursed roses</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-plant">Plant</span><span class="loc-badge">Ashenford</span></div>
+      <div class="icard-effect">✦ Raw: Makes the voice sound slightly warmer and more trustworthy.</div>
+      <div class="icard-desc">Roses growing in Ashenford's mist-soaked gardens, dusted with the same gentle curse that afflicts the town. Brewed carefully, it enhances the drinker's charm and social ease.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+    <!-- ══ ANIMAL ══ -->
+    <div class="icard" data-cat="animal" data-loc="loc-terravolca" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🪶</div><div>
+        <div class="icard-name">Ashes of a Phoenix Feather</div>
+        <div class="icard-source">Animal · Rare creature</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Terravolca</span></div>
+      <div class="icard-effect">✦ Raw: A single speck warms the air around it.</div>
+      <div class="icard-desc">The remnants of a phoenix feather reduced to glowing ash. Alone it merely gives warmth, but in a potion it massively accelerates healing.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill r5"></div><div class="rdot fill r5"></div><div class="rdot fill r5"></div><div class="rdot fill r5"></div><div class="rdot fill r5"></div></div><span style="font-size:0.65rem;color:var(--red-hi);margin-left:4px;">Legendary</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-whispering" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🦋</div><div>
+        <div class="icard-name">Mothwing Powder</div>
+        <div class="icard-source">Animal · Nocturnal moths</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Whispering Glade</span></div>
+      <div class="icard-effect">✦ Raw: Causes mild drowsiness when inhaled.</div>
+      <div class="icard-desc">Soft, iridescent dust brushed from nocturnal moths. By itself it causes drowsiness, but in a potion it induces deep, restful sleep and pleasant dreams.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Uncommon</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-whispering" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🐺</div><div>
+        <div class="icard-name">Ashwolf Tongue</div>
+        <div class="icard-source">Animal · Ashwolf</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Whispering Glade</span></div>
+      <div class="icard-effect">✦ Raw: Bitter and acrid. Makes the mouth feel numb.</div>
+      <div class="icard-desc">Harvested from the ash-furred wolves that prowl Heldidon's borderlands. Unpleasant raw, but when brewed it sharpens the drinker's senses and makes them harder to track.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Uncommon</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-whispering" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🐗</div><div>
+        <div class="icard-name">Ironboar Fat</div>
+        <div class="icard-source">Animal · Wild boar</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Whispering Glade</span><span class="loc-badge">Stonefang</span></div>
+      <div class="icard-effect">✦ Raw: Rich and warming when eaten. Staves off hunger for hours.</div>
+      <div class="icard-desc">Thick rendered fat from the large boars that roam the Whispering Glade and Stonefang foothills. Brewed, it coats the stomach and fortifies the body against cold and exhaustion.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-whispering" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🦌</div><div>
+        <div class="icard-name">Duskdeer Marrow</div>
+        <div class="icard-source">Animal · Deer bones</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Whispering Glade</span></div>
+      <div class="icard-effect">✦ Raw: Silky and mild. Heals chapped skin when applied.</div>
+      <div class="icard-desc">Marrow from the glade's deer, slow-heated from leg bones. The glade's spirit energy lends their marrow a faint restorative quality prized as a healing brew base.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-embermere" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🐟</div><div>
+        <div class="icard-name">Emberdock Salted Eel</div>
+        <div class="icard-source">Animal · Embermere docks</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Embermere</span></div>
+      <div class="icard-effect">✦ Raw: Smoky and salty. A filling, energising meal.</div>
+      <div class="icard-desc">Eels caught and smoked by fishmongers along the Ember Docks. Their dense oils and salt content make them a surprisingly effective brewing base for endurance potions.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-drownedcircle" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🦑</div><div>
+        <div class="icard-name">Drowned Circle Ink</div>
+        <div class="icard-source">Animal · Deep-water cephalopods</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Drowned Circle</span></div>
+      <div class="icard-effect">✦ Raw: Stains skin black for days. Tasteless but unsettling.</div>
+      <div class="icard-desc">Ink sacs from large cephalopods in the deeper parts of the Drowned Circle. Merfolk trade them at great cost. Brewed, it masks a person's presence from magical detection.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Rare</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-drownedcircle" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🦈</div><div>
+        <div class="icard-name">Reef Shark Bile</div>
+        <div class="icard-source">Animal · Drowned Circle reef sharks</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Drowned Circle</span></div>
+      <div class="icard-effect">✦ Raw: Causes a brief wave of cold dread when smelled.</div>
+      <div class="icard-desc">Harvested from the trained reef sharks that patrol the Drowned Circle — with permission, or at great personal risk. Brewed, it projects fear and dominance, making others hesitate.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Rare</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-rootbound" style="border-top:2px solid var(--red)">
+      <div class="icard-top"><div class="icard-ico">🦴</div><div>
+        <div class="icard-name">Hollow Knight Marrow</div>
+        <div class="icard-source">Animal · Hollow Knight remains</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Rootbound Labyrinth</span></div>
+      <div class="icard-effect">✦ Raw: Cold to the touch. Faintly hums near armour.</div>
+      <div class="icard-desc">Extracted from the bones of a defeated Hollow Knight. The residual battle-grudge locked inside can be distilled into a hardening agent that temporarily fortifies the body against blows.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Uncommon</span></div>
+    </div>
+
+    <!-- ══ ARCANE ══ -->
+    <div class="icard" data-cat="arcane" data-loc="loc-whispering" style="border-top:2px solid var(--blue-hi)">
+      <div class="icard-top"><div class="icard-ico">💧</div><div>
+        <div class="icard-name">Silver Dewdrops</div>
+        <div class="icard-source">Arcane · Spiderwebs at dawn</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Whispering Glade</span><span class="loc-badge">Rootbound Labyrinth</span></div>
+      <div class="icard-effect">✦ Raw: Refreshes the skin when applied.</div>
+      <div class="icard-desc">Collected at dawn from spiderwebs before the sun rises. On their own they refresh the skin, but in a potion they restore minor vitality and energy.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Uncommon</span></div>
+    </div>
+
+    <div class="icard" data-cat="arcane" data-loc="loc-zerathis" style="border-top:2px solid var(--blue-hi)">
+      <div class="icard-top"><div class="icard-ico">✨</div><div>
+        <div class="icard-name">Starlight Dust</div>
+        <div class="icard-source">Arcane · Meteor showers</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Zerathis</span></div>
+      <div class="icard-effect">✦ Raw: Makes objects twinkle faintly.</div>
+      <div class="icard-desc">Tiny shimmering particles gathered during meteor showers from impact rocks. Alone they make objects twinkle, but in a potion they boost luck for a short time.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill r5"></div><div class="rdot fill r5"></div><div class="rdot fill r5"></div><div class="rdot fill r5"></div><div class="rdot fill r5"></div></div><span style="font-size:0.65rem;color:var(--red-hi);margin-left:4px;">Legendary</span></div>
+    </div>
+
+    <div class="icard" data-cat="arcane" data-loc="loc-grimwater" style="border-top:2px solid var(--blue-hi)">
+      <div class="icard-top"><div class="icard-ico">🌊</div><div>
+        <div class="icard-name">Grimwater Essence</div>
+        <div class="icard-source">Arcane · River ritual water</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Grimwater Crossing</span></div>
+      <div class="icard-effect">✦ Raw: Tastes bitter. Makes the tongue numb briefly.</div>
+      <div class="icard-desc">River water from Grimwater Crossing collected during a coven ritual, distilled through cursed herbs. By itself it numbs the tongue; brewed it becomes a powerful binding or fear-inducing agent.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Rare — Coven-controlled</span></div>
+    </div>
+
+    <div class="icard" data-cat="arcane" data-loc="loc-rootbound" style="border-top:2px solid var(--blue-hi)">
+      <div class="icard-top"><div class="icard-ico">🕸️</div><div>
+        <div class="icard-name">Rootbound Silk</div>
+        <div class="icard-source">Arcane · Labyrinth hedge roots</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Rootbound Labyrinth</span></div>
+      <div class="icard-effect">✦ Raw: Incredibly sticky. Binds fingers together if handled carelessly.</div>
+      <div class="icard-desc">Fine threads from where the Rootbound Labyrinth's magical roots weave underground. Naturally adhesive and almost invisible when stretched thin. Brewed, it enhances grip, climbing ability, and silent movement.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Uncommon</span></div>
+    </div>
+
+    <div class="icard" data-cat="arcane" data-loc="loc-mistweave" style="border-top:2px solid var(--blue-hi)">
+      <div class="icard-top"><div class="icard-ico">🌫️</div><div>
+        <div class="icard-name">Mistweave Fog Residue</div>
+        <div class="icard-source">Arcane · Mistweave River at dusk</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Mistweave River</span></div>
+      <div class="icard-effect">✦ Raw: Makes breath visible even in warm air. Smells of cold stone.</div>
+      <div class="icard-desc">Dense magical fog that clings to the Mistweave River, collected in sealed jars at dusk when it condenses. Brewed, it can obscure a person's silhouette and muffle their footsteps.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Uncommon</span></div>
+    </div>
+
+    <div class="icard" data-cat="arcane" data-loc="loc-scriptoria" style="border-top:2px solid var(--blue-hi)">
+      <div class="icard-top"><div class="icard-ico">🪨</div><div>
+        <div class="icard-name">Leyline Crystal Shard</div>
+        <div class="icard-source">Arcane · Scriptoria leyline nodes</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Scriptoria</span></div>
+      <div class="icard-effect">✦ Raw: Vibrates faintly near active spellcasting. Warm to hold.</div>
+      <div class="icard-desc">Fragments of crystallised magical energy that form at Scriptoria's leyline nexus points, shaken loose by tremors or powerful spellwork. Brewed, they temporarily boost a drinker's arcane sensitivity and spellcasting potency.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Rare</span></div>
+    </div>
+
+    <div class="icard" data-cat="arcane" data-loc="loc-zerathis" style="border-top:2px solid var(--blue-hi)">
+      <div class="icard-top"><div class="icard-ico">⚡</div><div>
+        <div class="icard-name">Stormcaller Salt</div>
+        <div class="icard-source">Arcane · Lightning storms near Zerathis</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-arcane">Arcane</span><span class="loc-badge">Zerathis</span></div>
+      <div class="icard-effect">✦ Raw: Makes hair stand on end. Crackles faintly when wet.</div>
+      <div class="icard-desc">Salt crystals struck by lightning during the rare violent storms that sweep the Amber Dunes. Each grain carries a locked charge. Brewed carefully it sharpens reflexes; brewed carelessly, it explodes.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot fill"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Rare</span></div>
+    </div>
+
+    <!-- ══ FOOD / FARMED ══ -->
+    <div class="icard" data-cat="animal" data-loc="loc-embermere" style="border-top:2px solid #7a6020">
+      <div class="icard-top"><div class="icard-ico">🍯</div><div>
+        <div class="icard-name">Ashen Market Spice Blend</div>
+        <div class="icard-source">Farmed · Embermere market stalls</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Embermere</span></div>
+      <div class="icard-effect">✦ Raw: Sharp, complex flavour. Makes food taste extraordinary.</div>
+      <div class="icard-desc">A mixed blend of exotic spices from the Ashen Market. As a brewing catalyst it binds other ingredients together more efficiently, reducing brew time and improving consistency.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+    <div class="icard" data-cat="animal" data-loc="loc-rivenshield" style="border-top:2px solid #7a6020">
+      <div class="icard-top"><div class="icard-ico">🫙</div><div>
+        <div class="icard-name">Rivenshield Pickled Root</div>
+        <div class="icard-source">Farmed · Rivenshield market</div>
+      </div></div>
+      <div class="icard-badge-row"><span class="cat-badge cat-animal">Animal</span><span class="loc-badge">Rivenshield</span></div>
+      <div class="icard-effect">✦ Raw: Sharp and vinegary. Clears the sinuses instantly.</div>
+      <div class="icard-desc">Root vegetables from Rivenshield's river-fed plots, preserved in brine using a generations-old dwarven technique. Brewed, it clears toxins from the body and provides a brief resistance to poison.</div>
+      <div class="rarity-bar"><span class="rarity-label">Rarity</span><div class="rarity-dots"><div class="rdot fill"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div><span style="font-size:0.65rem;color:var(--cream-dim);margin-left:4px;">Common</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════ CRAFTING GUIDE ════════════════ -->
+<div id="crafting" class="pg">
+  <div class="ph">
+    <div class="ph-icon">📖</div>
+    <div>
+      <div class="ph-title">Crafting Guide</div>
+      <div class="ph-sub">How to brew potions in the world of Heldidon</div>
+    </div>
+  </div>
+
+  <div class="slabel">The Brewing Process</div>
+  <div class="guide-grid">
+    <div class="guide-step">
+      <div class="step-num">1</div>
+      <div class="step-title">Gather Ingredients</div>
+      <div class="step-body">Ingredients must be harvested from their source location in Heldidon. Most require a successful Instinct or Knowledge roll (Difficulty set by rarity: Common = 10, Uncommon = 13, Rare = 16, Legendary = 20) to find and collect without damaging them.</div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">2</div>
+      <div class="step-title">Find a Brewing Space</div>
+      <div class="step-body">Potions require at least a small cauldron, a heat source, and clean water. Common and Uncommon potions can be brewed at any campfire. Rare potions need an alchemist's lab or the Grimwater Crossing. Legendary potions require specific sacred sites.</div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">3</div>
+      <div class="step-title">Combine & Brew</div>
+      <div class="step-body">Make a Knowledge roll using the Potion's Difficulty. On Hope: perfect brew, full effect. On Fear: brew succeeds but a minor complication occurs (odd colour, strange taste, short duration). On failure: ingredients are lost and the brew is ruined.</div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">4</div>
+      <div class="step-title">Bottle & Store</div>
+      <div class="step-body">Potions last indefinitely if stored in sealed glass vials. You may carry up to 5 potions at once. Potions stored loose (unstoppered) lose potency after 3 days. Legendary potions must be consumed within 24 hours of brewing.</div>
+    </div>
+  </div>
+
+  <div class="slabel">Brewing Difficulties by Rarity</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:40px;">
+    <div style="background:var(--surface);border:1px solid rgba(90,170,112,0.3);border-radius:3px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="rarity-pip pip1"></span><span style="font-family:'Spectral SC',serif;font-size:0.75rem;color:var(--green-hi);">Common</span></div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">10</div>
+      <div style="font-size:0.8rem;color:var(--cream-dim);margin-top:4px;">2 ingredients · 1 hour brew time</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid rgba(200,164,74,0.3);border-radius:3px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="rarity-pip pip2"></span><span style="font-family:'Spectral SC',serif;font-size:0.75rem;color:var(--gold);">Uncommon</span></div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">13</div>
+      <div style="font-size:0.8rem;color:var(--cream-dim);margin-top:4px;">2 ingredients · 4 hour brew time</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid rgba(74,124,184,0.3);border-radius:3px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="rarity-pip pip3"></span><span style="font-family:'Spectral SC',serif;font-size:0.75rem;color:var(--blue-hi);">Rare</span></div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">16</div>
+      <div style="font-size:0.8rem;color:var(--cream-dim);margin-top:4px;">3 ingredients · 1 day brew time</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid rgba(192,64,64,0.3);border-radius:3px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="rarity-pip pip5"></span><span style="font-family:'Spectral SC',serif;font-size:0.75rem;color:var(--red-hi);">Legendary</span></div>
+      <div style="font-family:'UnifrakturMaguntia',cursive;font-size:2rem;color:var(--gold-pale);">20</div>
+      <div style="font-size:0.8rem;color:var(--cream-dim);margin-top:4px;">3 ingredients · 1 week · sacred site required</div>
+    </div>
+  </div>
+
+  <div class="slabel">Quick Reference — Ingredient → Potion Index</div>
+  <div class="recipe-table-wrap">
+    <table class="recipe-table">
+      <thead>
+        <tr>
+          <th>Potion</th>
+          <th>Ingredients</th>
+          <th>Effect Summary</th>
+          <th>Daggerheart Mechanic</th>
+          <th>Rarity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rarity-pip pip1"></span><span class="rname">Potion of Calm Insight</span></td>
+          <td class="ring"><span class="ing-badge">🌸 Moonflower Petals</span> <span class="plus-badge">+</span> <span class="ing-badge">🌿 Willow Bark</span></td>
+          <td class="reffect">Clears mind, boosts empathy and thought clarity</td>
+          <td class="rdh">+1 to next Knowledge or Presence roll</td>
+          <td><span class="rarity-pip pip1"></span>Common</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip1"></span><span class="rname">Potion of Restful Dreams</span></td>
+          <td class="ring"><span class="ing-badge">🦋 Mothwing Powder</span> <span class="plus-badge">+</span> <span class="ing-badge">🌸 Moonflower Petals</span></td>
+          <td class="reffect">Induces deep, restorative, pleasant sleep</td>
+          <td class="rdh">Extra 2d4 HP on next rest; must rest normally</td>
+          <td><span class="rarity-pip pip1"></span>Common</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip1"></span><span class="rname">Vitality Tonic</span></td>
+          <td class="ring"><span class="ing-badge">💧 Silver Dewdrops</span> <span class="plus-badge">+</span> <span class="ing-badge">🌿 Willow Bark</span></td>
+          <td class="reffect">Restores minor vitality, removes exhaustion</td>
+          <td class="rdh">Restore 1d4 HP</td>
+          <td><span class="rarity-pip pip1"></span>Common</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip2"></span><span class="rname">Dew of Silver Sight</span></td>
+          <td class="ring"><span class="ing-badge">💧 Silver Dewdrops</span> <span class="plus-badge">+</span> <span class="ing-badge">🌸 Moonflower Petals</span></td>
+          <td class="reffect">See through illusions and mist; heightened perception</td>
+          <td class="rdh">See through fog/dim light 30ft; reroll one failed Instinct this scene</td>
+          <td><span class="rarity-pip pip2"></span>Uncommon</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip2"></span><span class="rname">Warden's Whisper</span></td>
+          <td class="ring"><span class="ing-badge">🌿 Willow Bark</span> <span class="plus-badge">+</span> <span class="ing-badge">🦋 Mothwing Powder</span></td>
+          <td class="reffect">Communicate with spirits and sleeping minds</td>
+          <td class="rdh">Ask one question of a spirit or unconscious creature</td>
+          <td><span class="rarity-pip pip2"></span>Uncommon</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip2"></span><span class="rname">River-Tongue Brew</span></td>
+          <td class="ring"><span class="ing-badge">🌊 Grimwater Essence</span> <span class="plus-badge">+</span> <span class="ing-badge">🌿 Willow Bark</span></td>
+          <td class="reffect">Understand and speak any language; detect lies</td>
+          <td class="rdh">Understand (not speak) any language for one scene</td>
+          <td><span class="rarity-pip pip2"></span>Uncommon</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip3"></span><span class="rname">Dread of the Deep</span></td>
+          <td class="ring"><span class="ing-badge">🌊 Grimwater Essence</span> <span class="plus-badge">+</span> <span class="ing-badge">🦋 Mothwing Powder</span> <span class="plus-badge">+</span> <span class="ing-badge">💧 Silver Dewdrops</span></td>
+          <td class="reffect">Become temporarily terrifying; shadows shift around you</td>
+          <td class="rdh">1× force Frightened on target within 30ft (DC 14)</td>
+          <td><span class="rarity-pip pip3"></span>Rare</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip3"></span><span class="rname">Fortune's Eye</span></td>
+          <td class="ring"><span class="ing-badge">✨ Starlight Dust</span> <span class="plus-badge">+</span> <span class="ing-badge">💧 Silver Dewdrops</span> <span class="plus-badge">+</span> <span class="ing-badge">🌸 Moonflower Petals</span></td>
+          <td class="reffect">Boosts luck; converts next Fear outcome to Hope</td>
+          <td class="rdh">Gain 2 Hope</td>
+          <td><span class="rarity-pip pip3"></span>Rare</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip5"></span><span class="rname">Phoenix Rekindling</span></td>
+          <td class="ring"><span class="ing-badge">🪶 Phoenix Ashes</span> <span class="plus-badge">+</span> <span class="ing-badge">💧 Silver Dewdrops</span> <span class="plus-badge">+</span> <span class="ing-badge">🌿 Willow Bark</span></td>
+          <td class="reffect">Full heal; auto-succeed Last Breath; 3 Hope</td>
+          <td class="rdh">Restore 3d4 HP; +4 to Last Breath roll. 1 week to brew.</td>
+          <td><span class="rarity-pip pip5"></span>Legendary</td>
+        </tr>
+        <tr>
+          <td><span class="rarity-pip pip5"></span><span class="rname">The Stardrift Elixir</span></td>
+          <td class="ring"><span class="ing-badge">✨ Starlight Dust</span> <span class="plus-badge">+</span> <span class="ing-badge">🪶 Phoenix Ashes</span> <span class="plus-badge">+</span> <span class="ing-badge">🦋 Mothwing Powder</span></td>
+          <td class="reffect">Auto-Critical next roll; permanent +1 Trait; GM cannot spend Fear</td>
+          <td class="rdh">Gain 3 Hope; +3 to next action roll</td>
+          <td><span class="rarity-pip pip5"></span>Legendary</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slabel">Experimental Combinations</div>
+  <p style="font-size:0.9rem;line-height:1.8;color:var(--cream-dim);max-width:700px;margin-bottom:20px;">When players combine ingredients not listed in known recipes, the GM may allow an experimental brew. Roll Knowledge (Difficulty 15). On a Hope result, create a new potion with a surprising beneficial effect drawn from both ingredients' raw properties. On a Fear result, the brew has an unexpected side effect alongside its benefit. On a failure, the ingredients are destroyed and something unpleasant happens.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 22px;">
+      <div style="font-family:'Spectral SC',serif;font-size:0.82rem;color:var(--gold);margin-bottom:8px;">💡 Experiment Idea</div>
+      <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);"><strong style="color:var(--cream)">Grimwater Essence + Moonflower Petals:</strong> The coven's dark water and the clarity flower — possibly creates a truth serum, or a potion that lets you see a creature's memories.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 22px;">
+      <div style="font-family:'Spectral SC',serif;font-size:0.82rem;color:var(--gold);margin-bottom:8px;">💡 Experiment Idea</div>
+      <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);"><strong style="color:var(--cream)">Phoenix Ashes + Grimwater Essence:</strong> The heat of rebirth and the cold of the deep river — possibly creates a potion of temporary invulnerability or a wildly unstable explosive.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:20px 22px;">
+      <div style="font-family:'Spectral SC',serif;font-size:0.82rem;color:var(--gold);margin-bottom:8px;">💡 Experiment Idea</div>
+      <div style="font-size:0.86rem;line-height:1.75;color:var(--cream-dim);"><strong style="color:var(--cream)">Starlight Dust + Mothwing Powder:</strong> Stars and nocturnal moths — possibly creates a potion of dreamwalking or astral projection for one scene.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /#app -->
+
+<!-- ════════ MODALS ════════ -->
+<div id="modal-bg" onclick="closeModal(event)">
+  <div id="modal">
+    <div id="modal-bar" class="modal-bar"></div>
+    <div class="modal-inner">
+      <button class="modal-close" onclick="document.getElementById('modal-bg').classList.remove('open')">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──
+function show(id, btn) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── MODAL DATA ──
+const MODALS = {
+  embermere: {
+    color:'linear-gradient(90deg,#8b3a1a,#c06030)',
+    title:'Embermere', type:'Coastal City · Trade Hub · Royal Seat',
+    html:`
+      <h4>Overview</h4>
+      <p>A vibrant coastal city nestled between jagged cliffs and the shimmering sea. Known for fiery sunsets, bustling docks, and the royal House Embermantle. A melting pot of trade, culture, and mystery.</p>
+      <h4>Districts</h4>
+      <p><strong>The Ember Docks</strong> — Sprawling wooden piers, fishmongers, sailor taverns, and smuggler alleys. Run by dockmaster <em>Alexander Tidecaller</em>, a retired pirate turned bureaucrat.</p>
+      <p><strong>The Ashen Market</strong> — Chaotic, colorful bazaar of exotic goods and magical trinkets. Overseen by <em>Selka Vint</em>. The central fountain is rumoured to grant luck.</p>
+      <p><strong>The Emberkeep</strong> — Blackstone and crimson marble castle atop the cliffs. Contains a hidden vault of ancient relics. Guarded by the Crimson Knights.</p>
+      <h4>Royal House Embermantle</h4>
+      <p>Descended from the city's founders. Members bear flame-shaped birthmarks and bloodlines tied to elemental fire. Crest: a phoenix rising from embers.</p>
+      <p><strong>Current Monarch:</strong> Queen Maerlyn Embermantle &nbsp;·&nbsp; <strong>Heir:</strong> Prince Kaelen Embermantle</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Queen Maerlyn Embermantle</span>
+      <span class="npc-pill">Prince Kaelen Embermantle</span>
+      <span class="npc-pill">Alexander Tidecaller</span>
+      <span class="npc-pill">Selka Vint</span>
+      <h4>Factions Present</h4>
+      <span class="faction-pill">Red Requiem (spotted in taverns)</span>
+      <span class="faction-pill">Golden Lantern (Gilded Net)</span>
+      <span class="faction-pill">Forgotten Compass</span>
+      <span class="faction-pill">Silent Honor</span>
+      <h4>Festivals</h4>
+      <p><strong>Flamewake Festival</strong> — Fire dances and sea lanterns celebrating the city's founding. &nbsp; <strong>Tide's Bounty</strong> — A harvest celebration honouring the sea.</p>
+      <h4>Rumours</h4>
+      <p>A secret passage beneath the docks leads to a forgotten temple. The market fountain may be a sealed magical conduit. Red Requiem agents have been spotted in the tavern row.</p>`
+  },
+  zerathis: {
+    color:'linear-gradient(90deg,#7a6010,#c0a030)',
+    title:'Zerathis', type:'Desert Oasis City · Crystal Spire',
+    html:`
+      <h4>Overview</h4>
+      <p>A dazzling oasis city built around a colossal crystal spire that glows faintly at night, guiding travelers across the Amber Dunes. Sandstorms can swallow caravans whole — Zerathis is an island of light in a sea of shifting sand.</p>
+      <h4>The Crystal Spire</h4>
+      <p>The colossal spire is the spiritual and physical heart of the city. The Order of the Crystal Flame believes it channels divine celestial power into the desert. It hums faintly on cloudless nights.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">High Vizier Seraphel al-Dunai</span>
+      <h4>Factions Present</h4>
+      <span class="faction-pill">Dune Serpents (HQ)</span>
+      <span class="faction-pill">Order of the Crystal Flame</span>
+      <h4>Notable</h4>
+      <p>No deal is struck in Zerathis without the Dune Serpents' blessing. Their coiled serpent mark on parchment guarantees protection — for a price.</p>`
+  },
+  scriptoria: {
+    color:'linear-gradient(90deg,#2a3a7a,#5060c0)',
+    title:'Scriptoria', type:'Arcane City · Leyline Nexus · Script-or-ia',
+    html:`
+      <h4>Overview</h4>
+      <p>The intellectual and magical heart of Heldidon, built atop a powerful leyline nexus. Surrounded by jagged hills and ancient stone formations. Floating towers, glowing glyphs, and whispering winds fill the city with quiet brilliance.</p>
+      <h4>Districts</h4>
+      <p><strong>The Inkspire Quarter</strong> — Academic core. Home to The Grand Lexicon (a living library that rearranges itself), Quillspire Academy (most prestigious magic school), and The Scriptorium (scroll and rune guild).</p>
+      <p><strong>The Forgotten Compass Hub</strong> — Observatories, vaults, and meditation chambers around The Eye of Memory. Houses The Vault of Echoes and The Compass Table — a magical map that updates in real time.</p>
+      <h4>Governance</h4>
+      <p>The Arcane Conclave: seven archmages, one per school of magic. High Magus: <em>Thalorin Vey</em>, master of divination. Law: magic above third tier must be registered.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Andrew Rivers</span>
+      <span class="npc-pill">Thalorin Vey</span>
+      <h4>Portal to Codexia</h4>
+      <p>Hidden within the Forgotten Compass Hub. Disguised as an ordinary object — only Keepers know the unlock sigil.</p>
+      <h4>Rumours</h4>
+      <p>A hidden vault beneath Quillspire Academy contains forbidden chronomancy texts. Red Requiem spies may be infiltrating the Emberglass Ward. The Grand Lexicon once spoke aloud — and hasn't since.</p>`
+  },
+  ashenford: {
+    color:'linear-gradient(90deg,#2a4a2a,#405840)',
+    title:'Ashenford', type:'Cursed Town · Gentle Undead Community',
+    html:`
+      <h4>Overview</h4>
+      <p>Cobblestone streets lit by green lanterns, ivy-covered houses, and a mist that never quite leaves. The townsfolk are gentle undead — cursed but kind. "They might be pale, slow-moving, but endlessly polite — always offering tea, even if their hands occasionally drop it."</p>
+      <h4>The Curse</h4>
+      <p>Centuries ago a greedy lord desecrated the resting place of an ancient spirit. Instead of dying, the townsfolk rose again — zombie-like but gentle. Bodies decay slowly, souls remain kind. They are bound to Ashenford, unable to leave its mist-shrouded borders.</p>
+      <h4>Daily Life</h4>
+      <p>The cursed townsfolk crave not flesh but <em>connection</em> — they sustain themselves through stories, laughter, and companionship. Outsiders who visit often find themselves strangely comforted, though unsettled.</p>
+      <h4>The Mystery</h4>
+      <p>Some whisper the curse can be lifted if the ancient spirit is appeased. Others believe Ashenford has grown into something unique — a place where death is not an end but a new way of living.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Morwenna "Mo" Hollowbrew (Barkeeeper, The Last Drink)</span>
+      <span class="npc-pill">Mayor Greyveil</span>
+      <h4>Notable Locations</h4>
+      <p><strong>The Last Drink</strong> — Local tavern with music and a Golden Lantern notice board. Run by Mo Hollowbrew.</p>
+      <p><strong>Local Library</strong> — Well-known and unusually well-stocked for such a small cursed town.</p>`
+  },
+  rivenshield: {
+    color:'linear-gradient(90deg,#3a3a5a,#606090)',
+    title:'Rivenshield', type:'Dwarven Town · Elven Ruins · River Valley',
+    html:`
+      <h4>Overview</h4>
+      <p>Nestled in a rocky valley where the local river winds past ancient elven ruins, Rivenshield thrives on water power and dwarven ingenuity. Known for the finest blacksmithing in all of Heldidon.</p>
+      <h4>Lore</h4>
+      <p>Long ago the elves built a river settlement here, which was destroyed by trolls — leaving only a single child who the dwarves raised as their own. Despite this deep bond the two peoples continued to live apart, each respecting their own lands. The ruins nearby, covered in moss and vines, are a constant reminder.</p>
+      <h4>The Elven Ruins</h4>
+      <p>Ancient elven marble ruins stand close to the town, overgrown with moss and vines. The remaining elf, Trelia Spring, is a noticeable contrast to her dwarven neighbours — tall, lithe, and trained as a warrior.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Trelia Spring (Warrior Elf)</span>
+      <span class="npc-pill">Grandpa Joseph Spring (Town Leader)</span>
+      <span class="npc-pill">Henry Stone (Head Blacksmith, Second-in-command)</span>`
+  },
+  thornspire: {
+    color:'linear-gradient(90deg,#6a4a10,#c09030)',
+    title:'Thornspire Hub', type:'Adventurer\'s Hub · Tavern · Golden Lantern',
+    html:`
+      <h4>Overview</h4>
+      <p>Mira Thornspire's home — once the notorious Thornspire Dungeon — transformed by a band of brave adventurers into the realm's premier hub. A towering spire with lodging, a lively tavern with a performance stage, and a notice board brimming with quests.</p>
+      <h4>Mira Thornspire</h4>
+      <p>A mysterious being who was originally a chest in the dungeon. Andrew Rivers of the Forgotten Compass cursed them to stay within 1km of the dungeon. Later, the bard <em>Sapphire Merflare</em> found them and helped them grow as a person. Now Mira runs the hub, wears a comedy/tragedy mask depending on mood, and mentors new adventurers.</p>
+      <p>Mira never removes their mask. Behind it is a distorted face with a wide smile and sharp teeth. A compass birthmark sits on their neck.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Mira Thornspire</span>
+      <span class="npc-pill">Sapphire Merflare</span>
+      <h4>History</h4>
+      <p>Once known as Thornspire Dungeon — infamous for perilous depths and arcane secrets. Sapphire Merflare and her party cleared it and repurposed it into a haven for adventurers.</p>
+      <h4>Rumour</h4>
+      <p>Some whisper that beneath Thornspire lies a hidden vault of relics collected by retired adventurers. Mira denies its existence — but smiles when asked.</p>`
+  },
+  lexorith: {
+    color:'linear-gradient(90deg,#5a1010,#8b2020)',
+    title:'Lexorith Manor', type:'Villain Lair · Mountain Peak · Red Requiem HQ',
+    html:`
+      <h4>Overview</h4>
+      <p>Perched on a mountain peak, Lexorith Manor looks like a simple homestead from outside. Inside, true horror lies. Home of Madam Red and the central headquarters of the Red Requiem.</p>
+      <h4>Madam Red</h4>
+      <p>A figure with long beautiful black hair, a noble red dress, a leather booklet, and a quill feather in her hair. Her lips are stained red. She is skilled at making deals, surrounded by mystery, and utterly ruthless.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Madam Red</span>
+      <span class="npc-pill">Lucy (Second Commander)</span>
+      <h4>Rose Coins</h4>
+      <p>The Red Requiem's own currency is minted here — stamped with roses, banned in Embermere, and rumoured to be forged from the melted jewellery of their victims.</p>`
+  },
+  silentgrove: {
+    color:'linear-gradient(90deg,#1a3a5a,#2a5a8a)',
+    title:'Silent Grove', type:'Sacred Site · Dragon Sanctuary · Underground Temple',
+    html:`
+      <h4>Overview</h4>
+      <p>A vast underground cavern housing a columned temple where crystalline dragon eggs and sleeping dragons are preserved by ancient magic. Home to ancient tribes who guard this sacred place.</p>
+      <h4>The Slumbering Pact</h4>
+      <p>Long ago, dragons ruled the skies but were hunted to near extinction by mortal civilization. A conclave of ancient druids and dragon sages forged the Slumbering Pact: a sacred covenant to preserve the last dragons in magical stasis until the world is ready for their return. This was not imprisonment — it was protection.</p>
+      <h4>The Heart of the Slumbering Mist</h4>
+      <p>A fist-sized crystal pulsating with slow, rhythmic light. The physical anchor of the Slumbering Pact. If it were destroyed, the dragons would either wake prematurely or be lost forever.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Vaerith Silentscale (Tribal Leader)</span>`
+  },
+  whisperingglade: {
+    color:'linear-gradient(90deg,#1a4a20,#3a8040)',
+    title:'Whispering Glade', type:'Enchanted Forest · Ingredient Harvest · Spirit Realm',
+    html:`
+      <h4>Overview</h4>
+      <p>A deep forest of wild flowers and plentiful moss near Thornspire Hub. Walking through, you hear faint whispers — spirits trying to tell their stories. Many clearings provide camping spots for new adventurers.</p>
+      <h4>Day & Night</h4>
+      <p><strong>Day:</strong> Packs of wolves, deer, rabbits, boars, and birds roam freely. The forest feels alive and welcoming.</p>
+      <p><strong>Night:</strong> A soft glow helps adventurers navigate, but ghosts lurk in the shadows — drawn here by the same spirit energy that makes the forest sacred.</p>
+      <h4>The Elder Tree</h4>
+      <p>At the heart of the glade stands an elder tree large enough to shelter an entire adventuring party. Druid runes are etched into its bark and inside its hollow. It is said to be alive, aware, and watchful — offering advice and guidance to those who rest within it. Resting here is considered good luck.</p>
+      <h4>Ingredients Found Here</h4>
+      <p><strong>🌸 Moonflower Petals</strong> — bloom throughout the glade at night.</p>
+      <p><strong>🌿 Whispering Willow Bark</strong> — willows grow along the glade's inner streams.</p>
+      <p><strong>🦋 Mothwing Powder</strong> — nocturnal moths can be found here after dark.</p>
+      <p><strong>💧 Silver Dewdrops</strong> — collected at dawn from spiderwebs in the glade.</p>
+      <h4>Lore</h4>
+      <p>Long ago, the druids practiced here — creating the living glade and the elder tree as a living testament to their craft and care.</p>`
+  },
+  rootbound: {
+    color:'linear-gradient(90deg,#2a4a10,#4a7a20)',
+    title:'Rootbound Labyrinth', type:'Hedge Maze · Beast Lair · Dungeon',
+    html:`
+      <h4>Overview</h4>
+      <p>A large, neatly trimmed hedge maze that belies its lethal interior. Bones and blood stain the ground between the hedges. Inside, powerful magical equipment and treasures wait for those who can claim them — guarded by beasts under the control of the Master Druid.</p>
+      <h4>The Master Druid</h4>
+      <p>A druid cloaked in living vines with bark-like skin and glowing green eyes. Sees the maze as sacred and tests intruders to ensure they respect nature. Rewards respectful adventurers; punishes reckless ones. Animals and plants respond to their presence.</p>
+      <h4>Monsters</h4>
+      <p><strong>Boss:</strong> Shambling Mound</p>
+      <p><strong>Patrols:</strong> Twig Blights · Needle Blights · Awakened Shrubs · Awakened Trees</p>`
+  },
+  drownedcircle: {
+    color:'linear-gradient(90deg,#102a4a,#2a5a8a)',
+    title:'The Drowned Circle', type:'Sacred Lake · Submerged City · Merfolk Territory',
+    html:`
+      <h4>Overview</h4>
+      <p>A perfectly round, still lake. Its symmetry feels unnatural — as though carved by magic or ancient engineering. Beneath the dark surface, broken spires and collapsed archways hint at a city swallowed whole. The water is unnervingly quiet, and at night faint blue-green lights glow from the depths.</p>
+      <h4>City of the Deep</h4>
+      <p>The merfolk claim the drowned ruins as their ancestral capital, transformed when the land sank beneath the water. They have rebuilt among the ruins, weaving coral and kelp into the old stone.</p>
+      <h4>Guardianship</h4>
+      <p>The merfolk see the lake as sacred. Outsiders who dive without permission face patrols of merfolk warriors and aquatic beasts — including trained reef sharks.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Merfolk Ambassador</span>`
+  },
+  mistweave: {
+    color:'linear-gradient(90deg,#101a2a,#203050)',
+    title:'Mistweave River', type:'Cursed River · Monster Habitat',
+    html:`
+      <h4>Overview</h4>
+      <p>A wide, winding river cloaked in perpetual fog. The mist clings to the surface, hiding what lurks beneath. The water is dark, almost black, and faint ripples suggest movement even when the air is still.</p>
+      <h4>Monsters</h4>
+      <p>Giant Eels · River Serpents · Swarms of Piranha-like Fish · Drowned Dead · Tentacled Horror</p>
+      <h4>Encounter Ideas</h4>
+      <p><strong>Phantom Boat</strong> — A ghostly vessel drifts silently past. Following it leads into an ambush by drowned dead.</p>
+      <p><strong>Fog Attack</strong> — A giant eel bursts from the water, striking unseen until it's too late.</p>
+      <h4>Items Found Here</h4>`
+  },
+  grimwater: {
+    color:'linear-gradient(90deg,#3a2a4a,#6a4a8a)',
+    title:'Grimwater Crossing', type:'Witches\' Camp · Ritual Site · Potion Source',
+    html:`
+      <h4>Overview</h4>
+      <p>A shadowed crossing over the Grimwater River, where the air is thick with incense and whispers. The witches' coven has claimed this place as sacred ground, brewing potions and making offerings to their mysterious river patrons.</p>
+      <h4>The High Witch (The River-Mother)</h4>
+      <p>An elderly woman with long black hair streaked silver, always damp as if river-soaked. Pale skin marked with ritual tattoos resembling flowing water. Wears robes woven from reeds and bones. Patient, calculating, and enigmatic — she speaks in riddles and quotes the river's "voice". Once a healer who drank from the cursed Grimwater River during a famine and was bound to it by the spirits.</p>
+      <h4>Nyssa Hollowbrook</h4>
+      <p>A former apprentice who fled the coven after witnessing the River-Mother's cruelty. She now helps adventurers escape and seeks rare herbs to brew a potion that can cleanse her coven markings. The Grimwater Witches hunt her for betrayal.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">High Witch — The River-Mother</span>
+      <span class="npc-pill">Nyssa Hollowbrook (Redemption-seeking Apprentice)</span>
+      <h4>Activities</h4>
+      <p>Potion brewing from river herbs and monster parts · Ritual offerings of blood, bones, and enchanted trinkets · Secretive trades with smugglers and warlocks.</p>
+      <h4>Ingredients Sourced Here</h4>
+      <p><strong>🌿 Whispering Willow Bark</strong> — grows along the riverbanks.</p>
+      <p><strong>🌊 Grimwater Essence</strong> — ritual-distilled river water, controlled by the coven.</p>`
+  },
+  stonefang: {
+    color:'linear-gradient(90deg,#4a2a10,#8a5030)',
+    title:'Stonefang', type:'Ironfang Mountains Settlement',
+    html:`
+      <h4>Overview</h4>
+      <p>A rugged settlement carved into the foothills of the Ironfang Mountains, surrounded by forests thick with game and rivers running red with clay. Stone walls scarred by battles yet standing proud as a symbol of resilience.</p>
+      <h4>Atmosphere</h4>
+      <p>Fierce yet communal — the clang of forges, the roar of feasts, and the echo of war drums fill the air, but honor and kinship bind the town together.</p>
+      <h4>Key NPCs</h4>
+      <span class="npc-pill">Warchief Grathok Bloodfang</span>
+      <h4>The Ironfang Clans</h4>
+      <p>A coalition of orc families who swear loyalty to the Warchief. Each clan is known for a unique fighting style and heraldry. Leadership blends brute force with surprising pragmatism.</p>
+      <h4>The Warforge Bazaar</h4>
+      <p>A market where weapons, armor, beast hides, food, ale, and battle trophies are traded. One of the best places in Heldidon to acquire quality combat gear.</p>`
+  }
+};
+
+function openModal(key) {
+  const d = MODALS[key];
+  if (!d) return;
+  document.getElementById('modal-bar').style.background = d.color;
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-title">${d.title}</div>
+    <div class="modal-type">${d.type}</div>
+    <div class="modal-body">${d.html}</div>`;
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-bg')) {
+    document.getElementById('modal-bg').classList.remove('open');
+  }
+}
+
+// ── INGREDIENT FILTER ──
+function filterIng(filter, btn) {
+  document.querySelectorAll('#ing-filters .filt-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const cards = document.querySelectorAll('#ing-grid .icard');
+  let visible = 0;
+  cards.forEach(card => {
+    if (filter === 'all') {
+      card.classList.remove('hidden'); visible++;
+    } else if (filter.startsWith('loc-')) {
+      const locs = (card.dataset.loc || '').split(' ');
+      if (locs.includes(filter)) { card.classList.remove('hidden'); visible++; }
+      else card.classList.add('hidden');
+    } else {
+      if (card.dataset.cat === filter) { card.classList.remove('hidden'); visible++; }
+      else card.classList.add('hidden');
+    }
+  });
+  document.getElementById('ing-empty').style.display = visible === 0 ? 'block' : 'none';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('modal-bg').classList.remove('open');
+});
+</script>
+</body>
+</html>
