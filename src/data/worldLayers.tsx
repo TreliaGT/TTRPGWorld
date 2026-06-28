@@ -1,4 +1,27 @@
-export const worldLayers = [
+export type Area = {
+  id: string;
+  name: string;
+  short: string;
+  long: string;
+};
+
+export type WorldLayer =
+  | {
+      id: string;
+      name: string;
+      desc: string;
+      details: string;
+      areas: Area[];
+    }
+  | {
+      id: string;
+      name: string;
+      desc: string;
+      details: string;
+      areas?: undefined;
+    };
+
+export const worldLayers: WorldLayer[] = [
       {
     id: "heldidon",
     name: "Heldidon",

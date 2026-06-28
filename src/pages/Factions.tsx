@@ -13,7 +13,7 @@ export default function Factions() {
       </div>
 
       <div className="card-grid grid-2">
-        {factions.map((f) => (
+        {factions.map((f : any) => (
           <div className="card" key={f.name}>
             <div className="card-icon">{f.icon}</div>
             <div className="card-title">{f.name}</div>

@@ -1,4 +1,15 @@
-export default function Tabs({ active, setActive, tabs }) {
+type Tab = {
+  id: string;
+  label: string;
+};
+
+type TabsProps = {
+  active: string;
+  setActive: (id: string) => void;
+  tabs: Tab[];
+};
+
+export default function Tabs({ active, setActive, tabs }: TabsProps) {
   return (
     <div className="tabs">
       {tabs.map((t) => (
@@ -7,8 +18,7 @@ export default function Tabs({ active, setActive, tabs }) {
           className={`tab ${active === t.id ? "on" : ""}`}
           onClick={() => setActive(t.id)}
         >
-        
-          {t.name}
+          {t.label}
         </button>
       ))}
     </div>

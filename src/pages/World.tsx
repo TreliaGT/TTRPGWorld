@@ -3,11 +3,21 @@ import { worldLayers } from "../data/worldLayers";
 import Card from "../components/Card";
 import Modal from "../components/Modal";
 
+export type Area = {
+  id: string;
+  name: string;
+  short: string;
+  long: string;
+};
+
+
+
 export default function World() {
   const [active, setActive] = useState("heldidon");
   const [openArea, setOpenArea] = useState<any>(null);
 
-  const layer = worldLayers.find((l) => l.id === active);
+ const layer = worldLayers.find((l) => l.id === active);
+
 
   // Safety guard — prevents crashes if data is missing
   if (!layer) {
@@ -20,14 +30,15 @@ export default function World() {
       {/* LEFT TABS (desktop only) */}
       <div className="world-tabs">
         {worldLayers.map((l) => (
-          <button
-            key={l.id}
-            className={`world-tab ${active === l.id ? "on" : ""}`}
-            onClick={() => setActive(l.id)}
-          >
-            {l.name}
-          </button>
-        ))}
+            <button
+                key={l.id}
+                onClick={() => setActive(l.id)}
+                className={active === l.id ? "active" : ""}
+            >
+                {l.name}
+            </button>
+            ))}
+
       </div>
 
       {/* RIGHT CONTENT */}
@@ -55,7 +66,7 @@ export default function World() {
               <h3 className="area-header">Areas in this Realm</h3>
 
               <div className="card-grid">
-                {layer.areas.map((a) => (
+                {layer?.areas && layer.areas.map((a) => (
                   <Card
                     key={a.id}
                     title={a.name}
