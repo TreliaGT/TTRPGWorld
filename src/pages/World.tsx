@@ -33,7 +33,7 @@ export default function World() {
             <button
                 key={l.id}
                 onClick={() => setActive(l.id)}
-                className={active === l.id ? "active" : ""}
+                className={active === l.id ? "on world-tab" : "world-tab"} 
             >
                 {l.name}
             </button>

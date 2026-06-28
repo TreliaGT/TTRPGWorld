@@ -7,21 +7,21 @@ type NavbarProps = {
 
 export default function Navbar({ page, setPage }: NavbarProps) {
   return (
-    <nav className="nav">
+    <nav className="tabs">
       <button
-        className={page === "world" ? "active" : ""}
+        className={page === "world" ? "on tab" : "tab"}
         onClick={() => setPage("world")}
       >
         World
       </button>
       <button
-        className={page === "factions" ? "active" : ""}
+        className={page === "factions" ? "on tab" : "tab"}
         onClick={() => setPage("factions")}
       >
         Factions
       </button>
       <button
-        className={page === "mechanics" ? "active" : ""}
+        className={page === "mechanics" ? "on tab" : "tab"}
         onClick={() => setPage("mechanics")}
       >
         Mechanics
